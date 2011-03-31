@@ -75,8 +75,8 @@ expander
    .master( wb_trafficcop ),
    .slave( slaves ),
    .addrs( '{
-      '{32'h00000000,32'h0FFFFFFF},
-      '{32'h10000000,32'h1FFFFFFF},
+      '{32'h00000000,32'h00003FFF},
+      '{32'h00004000,32'h00004FFF},
       '{32'h20000000,32'h2FFFFFFF}
    } )
 );
@@ -86,7 +86,7 @@ expander
 wb_rom
 #(
    .data_width (32),
-   .addr_width (13)
+   .addr_width (14)
 )
 boot_rom
 (
@@ -97,10 +97,18 @@ boot_rom
 
 //
 // RAM
-assign slaves[1].ack = 1'b0;
-assign slaves[1].rty = 1'b1;
-assign slaves[1].err = 1'b0;
-assign slaves[1].dat_s2m = 'd0;
+wb_ram
+#(
+   .data_width (32),
+   .addr_width (12)
+)
+ram
+(
+   .clk( wb_clk ),
+   .rst( wb_rst ),
+   .bus( slaves[1].slave )//wb_boot_rom )
+);
+
 //
 // Touchscreen
 assign slaves[2].ack = 1'b0;

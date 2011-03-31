@@ -1,4 +1,10 @@
 
+//
+// Thermostat Top Level
+//
+// Author: Thomas Suckow
+//
+
 module SeniorProject
 (
 clk_in,
@@ -18,22 +24,32 @@ inout  [31:0]  GPIO0_DATA      /* synthesis altera_chip_pin_lc="@U7, @V5, @W6, @
 
 //
 // Clock Divider
-// 
+//
 
 wire clock_30khz, clock_33khz, clock_25mhz, clock_20khz;
 ClockDiv divider
 (
-	.inclk0(clk_in),
-	.c0    (clock_25mhz),
-	.c1    (clock_30khz),
-	.c2    (clock_20khz)
+   .inclk0(clk_in),
+   .c0    (clock_25mhz),
+   .c1    (clock_30khz),
+   .c2    (clock_20khz)
 );
 
 pll2 master_divider
 (
-	.inclk0(clk_in),
-	.c0    (clock_33khz)
+   .inclk0(clk_in),
+   .c0    (clock_33khz)
 );
+
+wire clock_slow;
+oitClockDivider #(30_000, 0.5) slow ( clock_30khz, clock_slow );
+
+//
+// Power On Reset
+//
+
+logic reset;
+POR #( .delay( 4 ) ) poweron ( .clk( clock_slow ), .rst( reset ) );
 
 //
 // Touch Screen
@@ -58,7 +74,7 @@ lcd_spi_cotroller	u1	(
 					// Host Side
 					.iCLK(clk_in),
 					.spiCLK(clock_20khz),
-					.iRST_n(1'b1),
+					.iRST_n(~reset),
 					// 3wire Side
 					.o3WIRE_SCLK(ltm_sclk),
 					.io3WIRE_SDAT(ltm_sda),
@@ -74,7 +90,7 @@ wire touching;
 // Touch Screen Digitizer ADC configuration //
 touch_controller touchc(
 					.iCLK(clk_in),
-					.iRST_n(1'b1),
+					.iRST_n(~reset),
 					.oADC_DIN(adc_din),
 					.oADC_DCLK(adc_dclk),
 					.iADC_DOUT(adc_dout),
@@ -120,7 +136,7 @@ assign ltm_b = touching?8'h60:val;
 lcd_timing_generator ltg
 	(
 		.iCLK(clock_25mhz),
-		.iRST_n( 1'b1 ),
+		.iRST_n( ~reset ),
 
 		.oHD(ltm_hd),
 		.oVD(ltm_vd),	
@@ -189,8 +205,6 @@ IntellitecSignal signal();
 
 
 
-wire clock_slow;
-oitClockDivider #(30_000, 0.5) slow ( clock_30khz, clock_slow );
 
 wire sync12;
 IntellitecMasterControl mc (clock_33khz,{1'b1,clock_slow}, signal);//(clock_33khz, signal.Master);
@@ -224,8 +238,6 @@ wire sig_tick;
 assign led_out = {sig_tick, count[8:0]};
 //assign debug = {item/*sync12, 3'd0*/, signal.mt12, signal.mt2, signal.tm4, signal.tm2};
 
-logic reset;
-POR #( .delay( 4 ) ) poweron ( .clk( clock_slow ), .rst( reset ) );
 
 //
 // Processor

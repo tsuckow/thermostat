@@ -12,7 +12,7 @@ module InferableROM
    
    initial //Init ROM from file
    begin
-      $readmemh("boot.dat", rom); // It would be great if this could be a parameter
+      $readmemh("../../Firmware_BootRom/boot.dat", rom); // It would be great if this could be a parameter
    end
    
    always @ (posedge clk)

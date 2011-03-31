@@ -279,7 +279,7 @@ assign {master.dat_s2m, master.ack, master.err, master.rty} = master_out;
       else if( between( master.adr, addrs[2] ) )
          master_out = s2m2;
       else
-         master_out = 'd0;
+         master_out = 'd2; //Error
 
    end
 
