@@ -1,61 +1,43 @@
-module rom_wb
+module wb_rom
 #(
-	parameter data_width = 8,
-	parameter addr_width = 8
+   parameter data_width = 8,
+   parameter addr_width = 8
 )
 (
-	dat_i,
-	dat_o,
-	adr_i,
-	we_i,
-	sel_i,
-	cyc_i,
-	stb_i,
-	ack_o,
-	cti_i,
-	clk_i,
-	rst_i
+   input clk,
+   input rst,
+   wishbone_b3.slave bus
 );
-   
-// wishbone signals
-input      [data_width-1:0] dat_i;   
-output     [data_width-1:0] dat_o;
-input      [addr_width-1:0] adr_i;
-input                       we_i;
-input      [3:0]            sel_i;
-input                       cyc_i;
-input                       stb_i;
-output reg                  ack_o;
-input      [2:0]            cti_i;
 
-input clk_i; // clock
-input rst_i; // async reset
 
 InferableROM
 #(
-	.data_width (data_width),
-	.addr_width (addr_width-2)
+   .data_width (data_width),
+   .addr_width (addr_width-2)
 )
 myROM
 (
-	.q_a    (dat_o),
-	.addr_a (adr_i[addr_width-1:2]),
-	.clk    (clk_i)
+   .q_a    (bus.dat_s2m),
+   .addr_a (bus.adr[addr_width-1:2]),
+   .clk    (clk)
 );
 
-// ack_o
-always @ (posedge clk_i or posedge rst_i)
-if (rst_i)
-	ack_o <= 1'b0;
-else
-	if (!ack_o)
-	begin
-		if (cyc_i & stb_i)
-			ack_o <= 1'b1;
-	end  
-	else if ((sel_i != 4'b1111) | (cti_i == 3'b000) | (cti_i == 3'b111))
-		ack_o <= 1'b0;
-         
+always @ (posedge clk or posedge rst)
+begin
+   if (rst)
+      bus.ack <= 1'b0;
+   else
+      if (!bus.ack)
+      begin
+         if (bus.cyc & bus.stb)
+            bus.ack <= 1'b1;
+      end
+      else if ((bus.sel != 4'b1111) | (bus.cti == 3'b000) | (bus.cti == 3'b111))
+         bus.ack <= 1'b0;
+end
+
+assign bus.rty = 1'b0;
+assign bus.err = bus.we;
+
 endmodule
- 
-	      
+

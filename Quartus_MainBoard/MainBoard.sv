@@ -224,10 +224,13 @@ wire sig_tick;
 assign led_out = {sig_tick, count[8:0]};
 //assign debug = {item/*sync12, 3'd0*/, signal.mt12, signal.mt2, signal.tm4, signal.tm2};
 
+logic reset;
+POR #( .delay( 4 ) ) poweron ( .clk( clock_slow ), .rst( reset ) );
+
 //
 // Processor
 //
 
-ThermoProcessor proc (clock_20khz, ~buttons[0], sig_tick);
+ThermoProcessor proc (clock_20khz, reset, sig_tick); //~buttons[0]
 
 endmodule

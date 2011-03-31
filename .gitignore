@@ -21,3 +21,4 @@ PLLJ_PLLSPE_INFO.txt
 *.sof
 *.srf
 sopc_builder_log.txt
+simulation/

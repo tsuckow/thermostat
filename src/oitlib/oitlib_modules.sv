@@ -290,6 +290,11 @@ generate
 		
 endgenerate
 
+initial
+begin
+   out = 'd0;
+end
+
 endmodule
 
 // ============================================================================
