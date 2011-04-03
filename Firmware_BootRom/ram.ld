@@ -24,7 +24,7 @@ SECTIONS
     .data :     { *(.data)  }       > ram
     .bss :      { *(.bss)   }       > ram
      
-    .stack :
+    .stack ALIGN(0x4): /*Word Align*/
     {
         __STACK_TOP    = . ;
         . = . + 0x00000500;

@@ -1,33 +1,47 @@
-module wb_ram
+module wb_color_ram
 #(
    parameter addr_width = 8
 )
 (
    input clk,
+   input clk2,
    input rst,
-   wishbone_b3.slave bus
+   wishbone_b3.slave bus,
+   input [addr_width-1:2] addr,
+   output [7:0] r,
+   output [7:0] g,
+   output [7:0] b
 );
 
-logic [31:0] data_tmp;
+logic [23:0] data;
+logic [31:8] data_tmp;
 
 assign data_tmp[31:24] = bus.sel[3]?bus.dat_m2s[31:24]:bus.dat_s2m[31:24];
 assign data_tmp[23:16] = bus.sel[2]?bus.dat_m2s[23:16]:bus.dat_s2m[23:16];
 assign data_tmp[15:8]  = bus.sel[1]?bus.dat_m2s[15:8] :bus.dat_s2m[15:8];
-assign data_tmp[7:0]   = bus.sel[0]?bus.dat_m2s[7:0]  :bus.dat_s2m[7:0];
 
-InferableRAM
+InferableDualPortRAM
 #(
-   .data_width (32),
+   .data_width (24),
    .addr_width (addr_width-2)
 )
 myRAM
 (
    .dat_in  (data_tmp),
-   .dat_out (bus.dat_s2m),
-   .addr_a  (bus.adr[addr_width-1:2]),
+   .dat_out (bus.dat_s2m[31:8]),
+   .dat_ro  (data),
+   .addr    (bus.adr[addr_width-1:2]),
+   .addr_ro (addr),
    .we      (bus.we & bus.ack),
-   .clk     (~clk)
+   .clk     (~clk),
+   .clk2(clk2)
 );
+
+//Last byte is not used
+assign bus.dat_s2m[7:0] = 'd0;
+assign r = data[23:16];
+assign g = data[15:8];
+assign b = data[7:0];
 
 always @ (posedge clk or posedge rst)
 begin

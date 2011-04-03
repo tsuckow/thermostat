@@ -1,73 +1,24 @@
-
-	/*$$HEADER*/
-/******************************************************************************/
-/*                                                                            */
-/*                    H E A D E R   I N F O R M A T I O N                     */
-/*                                                                            */
-/******************************************************************************/
-
-// Project Name                   : 
-// File Name                      : BootReset.S
-// Prepared By                    : 
-// Project Start                  : 2008-07-01
-
-
-/*$$COPYRIGHT NOTICE*/
-/******************************************************************************/
-/*                                                                            */
-/*                      C O P Y R I G H T   N O T I C E                       */
-/*                                                                            */
-/******************************************************************************/
-
-// Copyright (c) ORSoC 2008 All rights reserved.
-
-// The information in this document is the property of ORSoC.
-// Except as specifically authorized in writing by ORSoC, the receiver of
-// this document shall keep the information contained herein confidential and
-// shall protect the same in whole or in part thereof from disclosure and
-// dissemination to third parties. Disclosure and disseminations to the receiver's
-// employees shall only be made on a strict need to know basis.
-
-
-/*$$DESCRIPTION*/
 /******************************************************************************/
 /*                                                                            */
 /*                           D E S C R I P T I O N                            */
 /*                                                                            */
 /******************************************************************************/
 
-
-
-/*$$CHANGE HISTORY*/
 /******************************************************************************/
 /*                                                                            */
 /*                         C H A N G E  H I S T O R Y                         */
 /*                                                                            */
 /******************************************************************************/
+/*
 
-// Date		Version	Description
-//------------------------------------------------------------------------
-// 080701	1.0	First version				marcus
+Date       Version Description                 Author
+20080701   1.0     First version               marcus
+20110331   1.1     Heavily Modified & Extended Thomas Suckow
 
-
-/*$$INCLUDE FILES*/
-/******************************************************************************/
-/*                                                                            */
-/*                      I N C L U D E   F I L E S                             */
-/*                                                                            */
+*/
 /******************************************************************************/
 
-//#include "board.h"
 #include "spr_defs.h"
-
-/*$$PRIVATE MACROS*/
-/******************************************************************************/
-/*                                                                            */
-/*                      P R I V A T E   M A C R O S                           */
-/*                                                                            */
-/******************************************************************************/
-
-#define KALLE 0x12345678
 
 /******************************************************************************/
 /*        L O A D   3 2  B I T   C O N S T A N T  I N T O   R E G I S T E R   */
@@ -85,10 +36,29 @@
 .macro  exception_vector name org
         .org \org
         .p2align 8
-        .global  __exception_\name
-__exception_\name:
-        
-        l.j __exception_\name
+
+        l.addi r1,r1,-4
+        l.sw 0x00(r1),r9
+
+        l.jal (save_state)
+        l.nop
+
+        l.jal (exception_\name)
+        l.nop
+
+        l.jal (restore_state)
+        l.nop
+
+        l.lwz r9 ,0x00(r1)
+        l.addi r1,r1,4
+
+        //Return from exception
+        l.rfe
+
+         /* By default we loop forever, but this can be overridden */
+        .weak exception_\name
+exception_\name:
+        l.j exception_\name
         l.nop
 .endm
 
@@ -180,12 +150,12 @@ exception_vector        illegal_instruction     0x700 - 0x100 // Sector .vectors
 
         .global  __external_IRQ
 
-__external_IRQ:        
-        l.addi r1,r1,-30*4			//move SP 30*4 adresses lower
+__external_IRQ:
+   //Reserve Return Address
+   l.addi r1,r1,-4
+   l.sw 0x00(r1),r9
 
-        l.sw 0x1c(r1),r9
-        
-        l.jal (save_state)
+   l.jal (save_state)
         l.nop
 		                
         // we mess with r3, r4 and r9
@@ -202,8 +172,8 @@ JUMP:	  l.jal (external_exception)
         l.jal (restore_state)
         l.nop
 
-        l.lwz r9 ,0x1c(r1)
-        l.addi r1,r1,30*4			//move SP 30*4 adresses lower
+   l.lwz r9 ,0x00(r1)
+   l.addi r1,r1,4
                 
         //Return from exception
         l.rfe
@@ -217,73 +187,80 @@ exception_vector        floating_point          0xD00 - 0x100 // Sector .vectors
 exception_vector        trap                    0xE00 - 0x100 // Sector .vectors start at 0x100
 exception_vector        unknown                 0x1F00 - 0x100 // Sector .vectors start at 0x100
 
-// Save current state (all general purpose registers)
+//
+//
+//
 
 .section .text, "ax"
+// Save current state (all general purpose registers)
 save_state:
-    l.sw 0x0(r1),r2
-    l.sw 0x4(r1),r3
-    l.sw 0x8(r1),r4
-    l.sw 0xc(r1),r5
-    l.sw 0x10(r1),r6
-    l.sw 0x14(r1),r7
-    l.sw 0x18(r1),r8
-    l.sw 0x20(r1),r10
-    l.sw 0x24(r1),r11
-    l.sw 0x28(r1),r12
-    l.sw 0x2c(r1),r13
-    l.sw 0x30(r1),r14
-    l.sw 0x34(r1),r15
-    l.sw 0x38(r1),r16
-    l.sw 0x3c(r1),r17
-    l.sw 0x40(r1),r18
-    l.sw 0x44(r1),r19
-    l.sw 0x48(r1),r20
-    l.sw 0x4c(r1),r21
-    l.sw 0x50(r1),r22
-    l.sw 0x54(r1),r23
-    l.sw 0x58(r1),r24
-    l.sw 0x5c(r1),r25
-    l.sw 0x60(r1),r26
-    l.sw 0x64(r1),r27
-    l.sw 0x68(r1),r28
-    l.sw 0x6c(r1),r29
-    l.sw 0x70(r1),r30
-    l.jr r9
-    l.nop
+   //Reserve Stack Space
+   l.addi r1,r1, -29*4
+   l.sw 0x0(r1),r2
+   l.sw 0x4(r1),r3
+   l.sw 0x8(r1),r4
+   l.sw 0xc(r1),r5
+   l.sw 0x10(r1),r6
+   l.sw 0x14(r1),r7
+   l.sw 0x18(r1),r8
+   l.sw 0x20(r1),r10
+   l.sw 0x24(r1),r11
+   l.sw 0x28(r1),r12
+   l.sw 0x2c(r1),r13
+   l.sw 0x30(r1),r14
+   l.sw 0x34(r1),r15
+   l.sw 0x38(r1),r16
+   l.sw 0x3c(r1),r17
+   l.sw 0x40(r1),r18
+   l.sw 0x44(r1),r19
+   l.sw 0x48(r1),r20
+   l.sw 0x4c(r1),r21
+   l.sw 0x50(r1),r22
+   l.sw 0x54(r1),r23
+   l.sw 0x58(r1),r24
+   l.sw 0x5c(r1),r25
+   l.sw 0x60(r1),r26
+   l.sw 0x64(r1),r27
+   l.sw 0x68(r1),r28
+   l.sw 0x6c(r1),r29
+   l.sw 0x70(r1),r30
+   l.sw 0x75(r1),r31
+   l.jr r9
+   l.nop
 
 // Restore current state
-
 restore_state:
-    // disable interrupts (if needed)
-    l.lwz r2,0x0(r1)
-    l.lwz r3  ,0x4(r1)
-    l.lwz r4  ,0x8(r1)
-    l.lwz r5  ,0xc(r1)
-    l.lwz r6 ,0x10(r1)
-    l.lwz r7 ,0x14(r1)
-    l.lwz r8 ,0x18(r1)
-    l.lwz r10,0x20(r1)
-    l.lwz r11,0x24(r1)
-    l.lwz r12,0x28(r1)
-    l.lwz r13,0x2c(r1)
-    l.lwz r14,0x30(r1)
-    l.lwz r15,0x34(r1)
-    l.lwz r16,0x38(r1)
-    l.lwz r17,0x3c(r1)
-    l.lwz r18,0x40(r1)
-    l.lwz r19,0x44(r1)
-    l.lwz r20,0x48(r1)
-    l.lwz r21,0x4c(r1)
-    l.lwz r22,0x50(r1)
-    l.lwz r23,0x54(r1)
-    l.lwz r24,0x58(r1)
-    l.lwz r25,0x5c(r1)
-    l.lwz r26,0x60(r1)
-    l.lwz r27,0x64(r1)
-    l.lwz r28,0x68(r1)
-    l.lwz r29,0x6c(r1)
-    l.lwz r30,0x70(r1)
-    l.jr r9
-    l.nop
+   l.lwz r2  ,0x0(r1)
+   l.lwz r3  ,0x4(r1)
+   l.lwz r4  ,0x8(r1)
+   l.lwz r5  ,0xc(r1)
+   l.lwz r6 ,0x10(r1)
+   l.lwz r7 ,0x14(r1)
+   l.lwz r8 ,0x18(r1)
+   l.lwz r10,0x20(r1)
+   l.lwz r11,0x24(r1)
+   l.lwz r12,0x28(r1)
+   l.lwz r13,0x2c(r1)
+   l.lwz r14,0x30(r1)
+   l.lwz r15,0x34(r1)
+   l.lwz r16,0x38(r1)
+   l.lwz r17,0x3c(r1)
+   l.lwz r18,0x40(r1)
+   l.lwz r19,0x44(r1)
+   l.lwz r20,0x48(r1)
+   l.lwz r21,0x4c(r1)
+   l.lwz r22,0x50(r1)
+   l.lwz r23,0x54(r1)
+   l.lwz r24,0x58(r1)
+   l.lwz r25,0x5c(r1)
+   l.lwz r26,0x60(r1)
+   l.lwz r27,0x64(r1)
+   l.lwz r28,0x68(r1)
+   l.lwz r29,0x6c(r1)
+   l.lwz r30,0x70(r1)
+   l.lwz r31,0x75(r1)
+   //Restore Stack
+   l.addi r1,r1,29*4
+   l.jr r9
+   l.nop
 

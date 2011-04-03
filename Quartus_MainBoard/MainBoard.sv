@@ -129,9 +129,13 @@ wire	[7:0]	ltm_b;		//	LTM Blue Data 8 Bits
 
 wire [7:0] val;
 assign val = (yCoord == 0 | xCoord == 0 | yCoord == 479 | xCoord == 799)?8'hFF:yCoord[8:1];//'h01;
-assign ltm_r = (((4096-y_coord)*480/4096) == yCoord | ((4096-x_coord)*800/4096) == xCoord)?8'hFF:(touching?8'h00:val);
-assign ltm_g = touching?8'h00:val;
-assign ltm_b = touching?8'h60:val;
+//assign ltm_r = (((4096-y_coord)*480/4096) == yCoord | ((4096-x_coord)*800/4096) == xCoord)?8'hFF:(touching?8'h00:val);
+//assign ltm_g = touching?8'h00:val;
+//assign ltm_b = touching?8'h60:val;
+
+logic [9:0] buf_addr;
+assign buf_addr = xCoord;
+
 		
 lcd_timing_generator ltg
 	(
@@ -234,7 +238,6 @@ IntellitecThermostatControl tc (clock_30khz, ac1, ac2, f1O, f1H, f2O, f2H, ht1, 
 output [9:0] led_out /* synthesis altera_chip_pin_lc="@B1, @B2, @C2, @C1, @E1, @F2, @H1, @J3, @J2, @J1" */;
 //assign led_out = {signal.mt12, signal.mt2, signal.tm4, signal.tm2, 4'd0,clock_30khz, clock_33khz};
 //assign led_out = y_coord;
-wire sig_tick;
 assign led_out = {sig_tick, count[8:0]};
 //assign debug = {item/*sync12, 3'd0*/, signal.mt12, signal.mt2, signal.tm4, signal.tm2};
 
@@ -242,7 +245,17 @@ assign led_out = {sig_tick, count[8:0]};
 //
 // Processor
 //
-
-ThermoProcessor proc (clock_20khz, reset, sig_tick); //~buttons[0]
+wire sig_tick;
+ThermoProcessor proc
+(
+   .clock( clock_33khz ),
+   .rst( reset),
+   .ooo( sig_tick ),
+   .buf_clk(clock_25mhz),
+   .buf1_addr( buf_addr ),
+   .buf1_r( ltm_r ),
+   .buf1_g( ltm_g ),
+   .buf1_b( ltm_b )
+);
 
 endmodule

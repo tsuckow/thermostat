@@ -2,18 +2,28 @@ module ThermoProcessor
 (
    clock,
    rst,
-   ooo
+   ooo,
+   buf_clk,
+   buf1_addr,
+   buf1_r,
+   buf1_g,
+   buf1_b
 );
 
 input clock, rst;
 output ooo;
+input logic  buf_clk;
+input [11:2] buf1_addr;
+output [7:0] buf1_r;
+output [7:0] buf1_g;
+output [7:0] buf1_b;
 
 //Wishbone Common
 wire wb_clk = clock;
 wire wb_rst = rst;
 
 wishbone_b3 masters [3] ();
-wishbone_b3 slaves  [3] ();
+wishbone_b3 slaves  [5] ();
 //Masters
 //wishbone_b3 wb_cpu_data ();
 //wishbone_b3 wb_cpu_inst ();
@@ -68,16 +78,18 @@ cop
 // Bus Expander
 wb_expander_b3
 #(
-   .slaves(3)
+   .slaves(5)
 )
 expander
 (
    .master( wb_trafficcop ),
    .slave( slaves ),
    .addrs( '{
-      '{32'h00000000,32'h00003FFF},
-      '{32'h00004000,32'h00004FFF},
-      '{32'h20000000,32'h2FFFFFFF}
+      '{32'h00000000,32'h00003FFF}, //Boot ROM
+      '{32'h00004000,32'h00004FFF}, //RAM
+      '{32'h01000000,32'h017FFFFF}, //Offchip RAM
+      '{32'hFFFF0000,32'hFFFF0FFF}, //Video Buffer 1
+      '{32'hFFFF4000,32'hFFFF4FFF}  //Video Buffer 2
    } )
 );
 
@@ -99,7 +111,6 @@ boot_rom
 // RAM
 wb_ram
 #(
-   .data_width (32),
    .addr_width (12)
 )
 ram
@@ -111,10 +122,21 @@ ram
 
 //
 // Touchscreen
-assign slaves[2].ack = 1'b0;
-assign slaves[2].rty = 1'b0;
-assign slaves[2].err = 1'b1;
-assign slaves[2].dat_s2m = 'd0;
+wb_color_ram
+#(
+   .addr_width (12)
+)
+buf1
+(
+   .clk( wb_clk ),
+   .clk2( buf_clk ),
+   .rst( wb_rst ),
+   .bus( slaves[3].slave ),
+   .addr(buf1_addr),
+   .r(buf1_r),
+   .g(buf1_g),
+   .b(buf1_b)
+);
 
 //Don't Optimize Away
 assign ooo = masters[0].adr[2]; //Inst
