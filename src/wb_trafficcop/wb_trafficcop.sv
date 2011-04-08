@@ -112,6 +112,28 @@ typedef struct
    int max;
 } wb_addr_range;
 
+
+module wb_connector
+(
+   wishbone_b3.slave slave,
+   wishbone_b3.master master
+);
+
+assign master.adr = slave.adr;
+assign master.cyc = slave.cyc;
+assign slave.dat_s2m = master.dat_s2m;
+assign master.dat_m2s = slave.dat_m2s;
+assign master.sel = slave.sel;
+assign slave.ack = master.ack;
+assign slave.err = master.err;
+assign slave.rty = master.rty;
+assign master.we = slave.we;
+assign master.stb = slave.stb;
+assign master.cti = slave.cti;
+assign master.bte = slave.bte;
+
+endmodule
+
 //
 // Acts as a traffic cop allowing multiple masters to coexist on the same bus.
 //

@@ -1,22 +1,13 @@
 module ThermoProcessor
 (
-   clock,
-   rst,
-   ooo,
-   buf_clk,
-   buf1_addr,
-   buf1_r,
-   buf1_g,
-   buf1_b
+input clock,
+input rst,
+output ooo,
+input logic  buf_clk,
+input [11:2] buf_addr,
+output lcd::color bufcolor [1:0],
+wishbone_b3.master sdr_bus
 );
-
-input clock, rst;
-output ooo;
-input logic  buf_clk;
-input [11:2] buf1_addr;
-output [7:0] buf1_r;
-output [7:0] buf1_g;
-output [7:0] buf1_b;
 
 //Wishbone Common
 wire wb_clk = clock;
@@ -132,13 +123,30 @@ buf1
    .clk2( buf_clk ),
    .rst( wb_rst ),
    .bus( slaves[3].slave ),
-   .addr(buf1_addr),
-   .r(buf1_r),
-   .g(buf1_g),
-   .b(buf1_b)
+   .addr(buf_addr),
+   .r(bufcolor[0].r),
+   .g(bufcolor[0].g),
+   .b(bufcolor[0].b)
 );
 
-//Don't Optimize Away
+wb_color_ram
+#(
+   .addr_width (12)
+)
+buf2
+(
+   .clk( wb_clk ),
+   .clk2( buf_clk ),
+   .rst( wb_rst ),
+   .bus( slaves[4].slave ),
+   .addr(buf_addr),
+   .r(bufcolor[1].r),
+   .g(bufcolor[1].g),
+   .b(bufcolor[1].b)
+);
+
+wb_connector sdr_connector ( .master(sdr_bus), .slave(slaves[2]) );
 assign ooo = masters[0].adr[2]; //Inst
 
 endmodule
+

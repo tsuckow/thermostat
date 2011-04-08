@@ -13,7 +13,17 @@ led_out,
 debug,
 GPIO0_CLKIN,   // GPIO Connection 0 Clock In Bus
 GPIO0_CLKOUT,  // GPIO Connection 0 Clock Out Bus
-GPIO0_DATA     // GPIO Connection 0 Data Bus
+GPIO0_DATA,    // GPIO Connection 0 Data Bus
+sdr_ba,
+sdr_addr,
+sdr_ras_n,
+sdr_cas_n,
+sdr_we_n,
+sdr_cke,
+sdr_cs_n,
+sdr_dqm,
+sdr_data,
+sdr_clk
 );
 
 input          clk_in          /* synthesis altera_chip_pin_lc="@G21" */;
@@ -21,7 +31,16 @@ input  [2:0]   buttons         /* synthesis altera_chip_pin_lc="@F1, @G3, @H2" *
 input  [1:0]   GPIO0_CLKIN     /* synthesis altera_chip_pin_lc="@AA12, @AB12" */;	//	GPIO Connection 0 Clock In Bus
 output [1:0]   GPIO0_CLKOUT    /* synthesis altera_chip_pin_lc="@AA3, @AB3" */;		//	GPIO Connection 0 Clock Out Buss
 inout  [31:0]  GPIO0_DATA      /* synthesis altera_chip_pin_lc="@U7, @V5, @W6, @W7, @V8, @T8, @W10, @Y10, @V11, @R10, @V12, @U13, @W13, @Y13, @U14, @V14, @AA4, @AB4, @AA5, @AB5, @AA8, @AB8, @AA10, @AB10, @AA13, @AB13, @AB14, @AA14, @AB15, @AA15, @AA16, @AB16" */;	//	GPIO Connection 0 Data Bus
-
+output [1:0] sdr_ba            /* synthesis altera_chip_pin_lc="@A4, @B5" */;
+output[12:0] sdr_addr          /* synthesis altera_chip_pin_lc="@C8, @A7, @B4, @B7, @C7, @A6, @B6, @C6, @A5, @C3, @B3, @A3, @C4" */;
+output       sdr_ras_n         /* synthesis altera_chip_pin_lc="@F7" */;
+output       sdr_cas_n         /* synthesis altera_chip_pin_lc="@G8" */;
+output       sdr_we_n          /* synthesis altera_chip_pin_lc="@D6" */;
+output       sdr_cke           /* synthesis altera_chip_pin_lc="@E6" */;
+output       sdr_cs_n          /* synthesis altera_chip_pin_lc="@G7" */;
+output [1:0] sdr_dqm           /* synthesis altera_chip_pin_lc="@B8, @E7" */;
+inout [15:0] sdr_data          /* synthesis altera_chip_pin_lc="@F10, @E10, @A10, @B10, @C10, @A9, @B9, @A8, @F8, @H9, @G9, @F9, @E9, @H10, @G10, @D10" */;
+output       sdr_clk           /* synthesis altera_chip_pin_lc="@E5" */;
 //
 // Clock Divider
 //
@@ -127,19 +146,17 @@ wire	[7:0]	ltm_r;		//	LTM Red Data 8 Bits
 wire	[7:0]	ltm_g;		//	LTM Green Data 8 Bits
 wire	[7:0]	ltm_b;		//	LTM Blue Data 8 Bits
 
-wire [7:0] val;
-assign val = (yCoord == 0 | xCoord == 0 | yCoord == 479 | xCoord == 799)?8'hFF:yCoord[8:1];//'h01;
-//assign ltm_r = (((4096-y_coord)*480/4096) == yCoord | ((4096-x_coord)*800/4096) == xCoord)?8'hFF:(touching?8'h00:val);
-//assign ltm_g = touching?8'h00:val;
-//assign ltm_b = touching?8'h60:val;
-
 logic [9:0] buf_addr;
 assign buf_addr = xCoord;
+
+logic lcd_clk;
+oitClockDivider #(25_000_000, 8_000_000) lcdclk ( clock_25mhz, lcd_clk );
+//assign lcd_clk = clock_33khz;
 
 		
 lcd_timing_generator ltg
 	(
-		.iCLK(clock_25mhz),
+		.iCLK(lcd_clk),//25mhz),
 		.iRST_n( ~reset ),
 
 		.oHD(ltm_hd),
@@ -165,7 +182,7 @@ assign	GPIO_0[5]	=ltm_b[3];
 assign	GPIO_0[6]	=ltm_b[2];
 assign	GPIO_0[7]	=ltm_b[1];
 assign	GPIO_0[8]	=ltm_b[0];
-assign	GPIO_0[9]	=clock_25mhz;
+assign	GPIO_0[9]	=lcd_clk;//clock_25mhz;
 assign	GPIO_0[10]	=ltm_den;
 assign	GPIO_0[11]	=ltm_hd;
 assign	GPIO_0[12]	=ltm_vd;
@@ -245,17 +262,41 @@ assign led_out = {sig_tick, count[8:0]};
 //
 // Processor
 //
+wishbone_b3 sdr_bus ();
+
 wire sig_tick;
+lcd::color bufcolor [1:0];
 ThermoProcessor proc
 (
-   .clock( clock_33khz ),
+   .clock(clk_in),
    .rst( reset),
    .ooo( sig_tick ),
-   .buf_clk(clock_25mhz),
-   .buf1_addr( buf_addr ),
-   .buf1_r( ltm_r ),
-   .buf1_g( ltm_g ),
-   .buf1_b( ltm_b )
+   .buf_clk(lcd_clk),
+   .buf_addr( buf_addr ),
+   .bufcolor( bufcolor ),
+   .sdr_bus( sdr_bus )
 );
+
+assign ltm_r = bufcolor[yCoord[0]].r;
+assign ltm_g = bufcolor[yCoord[0]].g;
+assign ltm_b = bufcolor[yCoord[0]].b;
+
+
+wb_sdram16 sdr
+(
+   .clk(clk_in),
+   .rst(reset),
+   .bus(sdr_bus),
+   .ba(sdr_ba),
+   .addr(sdr_addr),
+   .ras_n(sdr_ras_n),
+   .cas_n(sdr_cas_n),
+   .we_n(sdr_we_n),
+   .cke(sdr_cke),
+   .cs_n(sdr_cs_n),
+   .dqm(sdr_dqm),
+   .data(sdr_data)
+);
+assign       sdr_clk = clk_in;
 
 endmodule

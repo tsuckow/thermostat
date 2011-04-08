@@ -8,7 +8,7 @@ module InferableROM
    input clk, 
    output reg [(data_width-1):0] q_a
 );
-   reg [data_width-1:0] rom[0:2**addr_width-1];
+   logic [data_width-1:0] rom[0:2**addr_width-1];
    
    initial //Init ROM from file
    begin
@@ -20,4 +20,8 @@ module InferableROM
       q_a <= rom[addr_a];
    end
    
+   initial
+   begin
+      q_a <= 'hDEADBEEF;
+   end
 endmodule

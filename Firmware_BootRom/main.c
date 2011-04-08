@@ -19,22 +19,42 @@ __uint32_t __attribute__((used,section(".text2"))) Display()
 	return haha;
 }
 */
+
+volatile uint32_t * const SDRAM = (uint32_t * const)0x01000000;
+
 void Start()
 {
-	uint32_t bob;
    long i;
-
-	bob = 0xEF;
+   volatile unsigned long bob = 0;
+   for(i = 0; i < 0x7FFFFF/4; ++i)
+   {
+      SDRAM[i] = 0xDEADBEEF + i;
+   }
 
    while(1)
    {
 //      syscall(0x80, &bob);
-
-      for(i = 0; i < 800; ++i)
+      for(i = 0; i < 0x7FFFFF/4; ++i)
       {
-         setPixel(i, i + bob);
+         if( SDRAM[i] == (0xDEADBEEF+i) )
+         {
+            setPixel(i % 512, 0, 0xFF, 0);
+         }
+         else
+         {
+            setPixel(i % 512, 0xFF, 0, 0);
+         }
       }
 
-      bob += 1;
+      for(i = 0; i < bob; ++i);
+
+      ++bob;
+
+      uint8_t color = (bob%2==0)?0xFF:0x00;
+
+      for(i = 0; i < 10; ++i)
+      {
+         setPixel(600+i, color, color, color);
+      }
    }
 }

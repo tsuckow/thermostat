@@ -12,9 +12,12 @@ struct color
 volatile color * const buffer1 = reinterpret_cast<color * const>(0xFFFF0000);
 volatile color * const buffer2 = reinterpret_cast<color * const>(0xFFFF4000);
 
-void setPixel(long num, uint8_t value)
+void setPixel(long num, uint8_t r, uint8_t g, uint8_t b)
 {
-   buffer1[num].r = num;
-   buffer1[num].g = value;
-   buffer1[num].b = value;
+   buffer1[num].r = r;
+   buffer1[num].g = g;
+   buffer1[num].b = b;
+   buffer2[num].r = r;
+   buffer2[num].g = g;
+   buffer2[num].b = b;
 }
