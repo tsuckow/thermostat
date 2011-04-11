@@ -45,7 +45,7 @@ output       sdr_clk           /* synthesis altera_chip_pin_lc="@E5" */;
 // Clock Divider
 //
 
-wire clock_30khz, clock_33khz, clock_25mhz, clock_20khz;
+wire clock_30khz, clock_33khz, clock_25mhz, clock_20khz, clock_100mhz;
 ClockDiv divider
 (
    .inclk0(clk_in),
@@ -58,6 +58,12 @@ pll2 master_divider
 (
    .inclk0(clk_in),
    .c0    (clock_33khz)
+);
+
+PLLFAST clkmult
+(
+   .inclk0(clk_in),
+   .c0    (clock_100mhz)
 );
 
 wire clock_slow;
@@ -274,7 +280,9 @@ ThermoProcessor proc
    .buf_clk(lcd_clk),
    .buf_addr( buf_addr ),
    .bufcolor( bufcolor ),
-   .sdr_bus( sdr_bus )
+   .sdr_bus( sdr_bus ),
+   .hsync( ltm_hd ),
+   .vsync( ltm_vd )
 );
 
 assign ltm_r = bufcolor[yCoord[0]].r;

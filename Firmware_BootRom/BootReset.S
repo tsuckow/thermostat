@@ -139,7 +139,7 @@ _reset:
 exception_vector        bus_error               0x200 - 0x100 // Sector .vectors start at 0x100
 exception_vector        data_page_fault         0x300 - 0x100 // Sector .vectors start at 0x100
 exception_vector        instruction_page_fault  0x400 - 0x100 // Sector .vectors start at 0x100
-exception_vector        tick_timer              0x500 - 0x100 // Sector .vectors start at 0x100
+exception_vector        tick_timer              0x500 - 0x100 // Sector .vectors start at 0x100 //Low PRIO Interrupt?
 exception_vector        unaligned_access        0x600 - 0x100 // Sector .vectors start at 0x100
 exception_vector        illegal_instruction     0x700 - 0x100 // Sector .vectors start at 0x100
 
@@ -151,32 +151,38 @@ exception_vector        illegal_instruction     0x700 - 0x100 // Sector .vectors
         .global  __external_IRQ
 
 __external_IRQ:
+   /*
+   Redzone: We are not allowed to touch 128 bytes past stack pointer.
+   We could also use gcc flag -mredzone=0
+   */
+   l.addi r1,r1,-128
+
    //Reserve Return Address
    l.addi r1,r1,-4
    l.sw 0x00(r1),r9
 
    l.jal (save_state)
-        l.nop
-		                
-        // we mess with r3, r4 and r9
-        //
-        l.mfspr r3,r0,SPR_ESR_BASE      // get SR before interrupt
-        l.andi  r4,r3,SPR_SR_IEE        // check if it had SPR_SR_IEE bit enabled
-        l.sfeqi r4,0
-        l.bnf   JUMP                      // external irq enabled, all ok.
-        l.nop
+   l.nop
 
-JUMP:	  l.jal (external_exception)
-        l.nop
+   /*
+   If we nested exceptions, we would need to save this (SR's previous state)
+   l.mfspr r3,r0,SPR_ESR_BASE
+   */
 
-        l.jal (restore_state)
-        l.nop
+   l.jal (external_exception)
+   l.nop
+
+   l.jal (restore_state)
+   l.nop
 
    l.lwz r9 ,0x00(r1)
    l.addi r1,r1,4
-                
-        //Return from exception
-        l.rfe
+
+   /*Restore Redzone*/
+   l.addi r1,r1,128
+
+   //Return from exception
+   l.rfe
 
 /* Exceptions Cont. */
 exception_vector        data_tlb_miss           0x900 - 0x100 // Sector .vectors start at 0x100
@@ -224,7 +230,7 @@ save_state:
    l.sw 0x68(r1),r28
    l.sw 0x6c(r1),r29
    l.sw 0x70(r1),r30
-   l.sw 0x75(r1),r31
+   l.sw 0x1C(r1),r31
    l.jr r9
    l.nop
 
@@ -258,7 +264,7 @@ restore_state:
    l.lwz r28,0x68(r1)
    l.lwz r29,0x6c(r1)
    l.lwz r30,0x70(r1)
-   l.lwz r31,0x75(r1)
+   l.lwz r31,0x1C(r1)
    //Restore Stack
    l.addi r1,r1,29*4
    l.jr r9

@@ -6,7 +6,9 @@ output ooo,
 input logic  buf_clk,
 input [11:2] buf_addr,
 output lcd::color bufcolor [1:0],
-wishbone_b3.master sdr_bus
+wishbone_b3.master sdr_bus,
+input vsync,
+input hsync
 );
 
 //Wishbone Common
@@ -27,7 +29,8 @@ proc_wrapper myProc
    .clk( clock ),
    .rst( rst ),
    .wb_inst( masters[0].master ),//wb_cpu_inst ),
-   .wb_data( masters[1].master )//wb_cpu_data ),
+   .wb_data( masters[1].master ),//wb_cpu_data ),
+   .interrupts( {18'd0, ~hsync, ~vsync} )
 //   .debug( debug )
 );
 

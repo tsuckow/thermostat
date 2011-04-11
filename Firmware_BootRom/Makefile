@@ -1,4 +1,4 @@
-PATH += :/home/tsuckow/ortoolchain/toolchain/toolchain-out/bin
+PATH += :/home/Deathbob/ortoolchain/toolchain/toolchain-out/bin
 
 CROSS_COMPILE = or32-linux-
 CC = $(CROSS_COMPILE)gcc
@@ -8,8 +8,8 @@ NM = $(CROSS_COMPILE)nm
 OBJ = $(CROSS_COMPILE)objdump
 OBJC = $(CROSS_COMPILE)objcopy
 
-INCLUDEPATH = /home/tsuckow/ortoolchain/toolchain/toolchain-out/or32-linux/sys-root/usr/include
-LIBPATH = /home/tsuckow/ortoolchain/toolchain/uClibc/lib
+INCLUDEPATH = /home/Deathbob/ortoolchain/toolchain/toolchain-out/or32-linux/sys-root/usr/include
+LIBPATH = /home/Deathbob/ortoolchain/toolchain/uClibc/lib
 
 CFLAGS  = -O2 -g -c -Wunknown-pragmas -mhard-mul -msoft-div -msoft-float -I $(INCLUDEPATH)
 LD_FLAGS= --stats -Tram.ld -L $(LIBPATH) -lc
