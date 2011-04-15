@@ -1,4 +1,4 @@
-PATH += :/home/Deathbob/ortoolchain/toolchain/toolchain-out/bin
+PATH += :/home/Deathbob/toolchain/toolchain-out/bin
 
 CROSS_COMPILE = or32-linux-
 CC = $(CROSS_COMPILE)gcc
@@ -8,15 +8,14 @@ NM = $(CROSS_COMPILE)nm
 OBJ = $(CROSS_COMPILE)objdump
 OBJC = $(CROSS_COMPILE)objcopy
 
-INCLUDEPATH = /home/Deathbob/ortoolchain/toolchain/toolchain-out/or32-linux/sys-root/usr/include
-LIBPATH = /home/Deathbob/ortoolchain/toolchain/uClibc/lib
+LIBPATH = /home/Deathbob/toolchain/toolchain-out/or32-linux/lib
 
-CFLAGS  = -O2 -g -c -Wunknown-pragmas -mhard-mul -msoft-div -msoft-float -I $(INCLUDEPATH)
-LD_FLAGS= --stats -Tram.ld -L $(LIBPATH) -lc
+CFLAGS  = -O2 -g -c -Wunknown-pragmas -mhard-mul -msoft-div -msoft-float -O3
+LD_FLAGS= --stats -Tram.ld -L $(LIBPATH) -lstdc++
 INCL    = test.h spr_defs.h touchscreen.h
 LIBS    =
 
-BOOTOBJS = main.o BootReset.o test.o touchscreen.o
+BOOTOBJS = main.o BootReset.o test.o touchscreen.o exception.o
 
 .PHONY: all
 all: boot.dat

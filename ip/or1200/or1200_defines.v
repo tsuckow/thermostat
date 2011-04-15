@@ -136,7 +136,7 @@
 //
 // Do not implement Insn cache
 //
-`define OR1200_NO_IC
+//`define OR1200_NO_IC
 
 //
 // Do not implement Data MMU

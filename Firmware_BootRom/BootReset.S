@@ -91,47 +91,49 @@ _reset:
 // Set stack pointer (r1) to 00003560
 // Clear all other registers
 
-	.equ sp,__STACK_BOTTOM	;
-	l.movhi r0,0x0000	; #r0 = 0
-	l.ori r0,r0,0x0000	; 
-	l.movhi r1,hi(sp)	; #r1 = sp
-	l.ori r1,r1,lo(sp)	;
-	l.or r2,r0,r0		; #clear r2
-	l.or r3,r0,r0		; #clear r3
-	l.or r4,r0,r0		; #clear r4
-	l.or r5,r0,r0		; #clear r5
-	l.or r6,r0,r0		; #clear r6
-	l.or r7,r0,r0		; #clear r7
-	l.or r8,r0,r0		; #clear r8
-	l.or r9,r0,r0		; #clear r9
-	l.or r10,r0,r0		; #clear r10
-	l.or r11,r0,r0		; #clear r11
-	l.or r12,r0,r0		; #clear r12
-	l.or r13,r0,r0		; #clear r13
-	l.or r14,r0,r0		; #clear r14
-	l.or r15,r0,r0		; #clear r15
-	l.or r16,r0,r0		; #clear r16
-	l.or r17,r0,r0		; #clear r17
-	l.or r18,r0,r0		; #clear r18
-	l.or r19,r0,r0		; #clear r19
-	l.or r20,r0,r0		; #clear r20
-	l.or r21,r0,r0		; #clear r21
-	l.or r22,r0,r0		; #clear r22
-	l.or r23,r0,r0		; #clear r23
-	l.or r24,r0,r0		; #clear r24
-	l.or r25,r0,r0		; #clear r25
-	l.or r26,r0,r0		; #clear r26
-	l.or r27,r0,r0		; #clear r27
-	l.or r28,r0,r0		; #clear r28
-	l.or r29,r0,r0		; #clear r29
-	l.or r30,r0,r0		; #clear r30
+   .equ sp,__STACK_BOTTOM	;
+   l.movhi r0,0x0000	; #r0 = 0
+   l.ori r0,r0,0x0000	; 
+   l.movhi r1,hi(sp)	; #r1 = sp
+   l.ori r1,r1,lo(sp)	;
+   l.or r2,r0,r0		; #clear r2
+   l.or r3,r0,r0		; #clear r3
+   l.or r4,r0,r0		; #clear r4
+   l.or r5,r0,r0		; #clear r5
+   l.or r6,r0,r0		; #clear r6
+   l.or r7,r0,r0		; #clear r7
+   l.or r8,r0,r0		; #clear r8
+   l.or r9,r0,r0		; #clear r9
+   l.or r10,r0,r0		; #clear r10
+   l.or r11,r0,r0		; #clear r11
+   l.or r12,r0,r0		; #clear r12
+   l.or r13,r0,r0		; #clear r13
+   l.or r14,r0,r0		; #clear r14
+   l.or r15,r0,r0		; #clear r15
+   l.or r16,r0,r0		; #clear r16
+   l.or r17,r0,r0		; #clear r17
+   l.or r18,r0,r0		; #clear r18
+   l.or r19,r0,r0		; #clear r19
+   l.or r20,r0,r0		; #clear r20
+   l.or r21,r0,r0		; #clear r21
+   l.or r22,r0,r0		; #clear r22
+   l.or r23,r0,r0		; #clear r23
+   l.or r24,r0,r0		; #clear r24
+   l.or r25,r0,r0		; #clear r25
+   l.or r26,r0,r0		; #clear r26
+   l.or r27,r0,r0		; #clear r27
+   l.or r28,r0,r0		; #clear r28
+   l.or r29,r0,r0		; #clear r29
+   l.or r30,r0,r0		; #clear r30
    l.or r31,r0,r0		; #clear r31		
 
-// Jump to start of program
 
+
+/* Jump to start of program */
    load32i r2, (Start)
    l.jr    r2
    l.nop
+/*---------------------------*/
 
 /*
  * Exceptions

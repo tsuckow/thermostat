@@ -3,12 +3,12 @@ module ThermoProcessor
 input clock,
 input rst,
 output ooo,
-input logic  buf_clk,
-input [11:2] buf_addr,
-output lcd::color bufcolor [1:0],
+//input logic  buf_clk,
+//input [11:2] buf_addr,
+//output lcd::color bufcolor [1:0],
 wishbone_b3.master sdr_bus,
-input vsync,
-input hsync
+wishbone_b3.slave lcd_bus,
+input vsync
 );
 
 //Wishbone Common
@@ -30,7 +30,7 @@ proc_wrapper myProc
    .rst( rst ),
    .wb_inst( masters[0].master ),//wb_cpu_inst ),
    .wb_data( masters[1].master ),//wb_cpu_data ),
-   .interrupts( {18'd0, ~hsync, ~vsync} )
+   .interrupts( {19'd0, ~vsync} )
 //   .debug( debug )
 );
 
@@ -42,6 +42,7 @@ proc_wrapper myProc
 
 //Debug
 //wishbone_b3 wb_debug ();
+/*
 assign masters[2].cyc = 1'b0;
 assign masters[2].stb = 1'b0;
 assign masters[2].adr = 'd0;
@@ -50,7 +51,7 @@ assign masters[2].sel = 'd0;
 assign masters[2].we = 'd0;
 assign masters[2].cti = 'd0;
 assign masters[2].bte = 'd0;
-
+*/
 
 wishbone_b3 wb_trafficcop ();
 
@@ -114,6 +115,7 @@ ram
    .bus( slaves[1].slave )//wb_boot_rom )
 );
 
+lcd::color bufcolor [1:0];
 //
 // Touchscreen
 wb_color_ram
@@ -149,6 +151,7 @@ buf2
 );
 
 wb_connector sdr_connector ( .master(sdr_bus), .slave(slaves[2]) );
+wb_connector lcd_connector ( .master(masters[2]), .slave(lcd_bus) );
 assign ooo = masters[0].adr[2]; //Inst
 
 endmodule

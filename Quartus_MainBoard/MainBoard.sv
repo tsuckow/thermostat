@@ -45,7 +45,7 @@ output       sdr_clk           /* synthesis altera_chip_pin_lc="@E5" */;
 // Clock Divider
 //
 
-wire clock_30khz, clock_33khz, clock_25mhz, clock_20khz, clock_100mhz;
+wire clock_30khz, clock_33khz, clock_25mhz, clock_20khz, clock_over;
 ClockDiv divider
 (
    .inclk0(clk_in),
@@ -63,7 +63,7 @@ pll2 master_divider
 PLLFAST clkmult
 (
    .inclk0(clk_in),
-   .c0    (clock_100mhz)
+   .c0    (clock_over)
 );
 
 wire clock_slow;
@@ -74,7 +74,7 @@ oitClockDivider #(30_000, 0.5) slow ( clock_30khz, clock_slow );
 //
 
 logic reset;
-POR #( .delay( 4 ) ) poweron ( .clk( clock_slow ), .rst( reset ) );
+POR #( .delay( 8 ) ) poweron ( .clk( clock_slow ), .rst( reset ) );
 
 //
 // Touch Screen
@@ -156,7 +156,7 @@ logic [9:0] buf_addr;
 assign buf_addr = xCoord;
 
 logic lcd_clk;
-oitClockDivider #(25_000_000, 8_000_000) lcdclk ( clock_25mhz, lcd_clk );
+oitClockDivider #(25_000_000, 4_000_000) lcdclk ( clock_25mhz, lcd_clk );
 //assign lcd_clk = clock_33khz;
 
 		
@@ -269,26 +269,38 @@ assign led_out = {sig_tick, count[8:0]};
 // Processor
 //
 wishbone_b3 sdr_bus ();
+wishbone_b3 lcd_bus ();
 
 wire sig_tick;
-lcd::color bufcolor [1:0];
+lcd::color bufcolor;
 ThermoProcessor proc
 (
    .clock(clk_in),
    .rst( reset),
    .ooo( sig_tick ),
-   .buf_clk(lcd_clk),
-   .buf_addr( buf_addr ),
-   .bufcolor( bufcolor ),
+//   .buf_clk(lcd_clk),
+//   .buf_addr( buf_addr ),
+//   .bufcolor( bufcolor ),
+   .lcd_bus( lcd_bus ),
    .sdr_bus( sdr_bus ),
-   .hsync( ltm_hd ),
    .vsync( ltm_vd )
 );
 
-assign ltm_r = bufcolor[yCoord[0]].r;
-assign ltm_g = bufcolor[yCoord[0]].g;
-assign ltm_b = bufcolor[yCoord[0]].b;
+assign ltm_r = bufcolor.r;
+assign ltm_g = bufcolor.g;
+assign ltm_b = bufcolor.b;
 
+screen_dma myLCDDMA
+(
+   .clk(clk_in),
+   .rst(reset),
+   .buffer_addr(xCoord),
+   .buffer_out(bufcolor),
+   .buffer_clk(lcd_clk),
+   .row(yCoord),
+   .hsync( ~ltm_hd ),
+   .bus( lcd_bus )
+);
 
 wb_sdram16 sdr
 (

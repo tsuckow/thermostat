@@ -19,7 +19,7 @@ myROM
 (
    .q_a    (bus.dat_s2m),
    .addr_a (bus.adr[addr_width-1:2]),
-   .clk    (clk)
+   .clk    (~clk)
 );
 
 always @ (posedge clk or posedge rst)

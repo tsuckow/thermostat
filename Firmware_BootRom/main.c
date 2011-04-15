@@ -4,13 +4,6 @@
 #include "touchscreen.h"
 #include "sprs.h"
 
-void external_exception()
-{
-   unsigned long inter;
-   inter = spr_int_getflags();
-   spr_int_clearflags( inter );
-}
-
 /*
 __uint32_t __attribute__((used,section(".text2"))) Display()
 {
@@ -24,16 +17,15 @@ volatile uint32_t * const SDRAM = (uint32_t * const)0x01000000;
 
 void Start()
 {
-   volatile unsigned long ints;
-   ints = spr_int_getmask();
+   //Enable Instruction Cache
+   spr_ic_enable();
+
    //Enable HSync & VSync
-   spr_int_setmask( 0x3 );
-   ints = spr_int_getmask();
-
-   spr_int_enable();
-
+//   spr_int_setmask( 0x3 );
+//   spr_int_enable();
+/*
    long i;
-   /*volatile*/ unsigned long bob = 0;
+    unsigned long bob = 0;
    for(i = 0; i < 0x7FFFFF/4; ++i)
    {
       SDRAM[i] = 0xDEADBEEF + i;
@@ -46,14 +38,34 @@ void Start()
       {
          if( SDRAM[i] == (0xDEADBEEF+i) )
          {
-            setPixel(i % 512, 0, bob + i/512, 0);
+            setPixel(i % 512, ((uint8_t)(bob + i/512)) << 8);
          }
          else
          {
-            setPixel(i % 512, 0xFF, 0, 0);
+            setPixel(i % 512, 0xFF0000);
          }
 
          ++bob;
       }
    }
+   */
+
+   unsigned long i;
+   unsigned long j;
+   unsigned long bob;
+   //while(1)
+   {
+      for(i = 0; i < 480; ++i)
+      {
+         for(j = 0; j < 800; ++j)
+         {
+            SDRAM[i*800+j] = (uint8_t)(j);
+         }
+      }
+
+      bob++;
+   }
+
+   while(1);
+
 }

@@ -14,11 +14,11 @@ module wb_color_ram
 );
 
 logic [23:0] data;
-logic [31:8] data_tmp;
+logic [23:0] data_tmp;
 
-assign data_tmp[31:24] = bus.sel[3]?bus.dat_m2s[31:24]:bus.dat_s2m[31:24];
-assign data_tmp[23:16] = bus.sel[2]?bus.dat_m2s[23:16]:bus.dat_s2m[23:16];
-assign data_tmp[15:8]  = bus.sel[1]?bus.dat_m2s[15:8] :bus.dat_s2m[15:8];
+assign data_tmp[23:16] = bus.sel[3]?bus.dat_m2s[23:16]:bus.dat_s2m[23:16];
+assign data_tmp[15:8]  = bus.sel[2]?bus.dat_m2s[15:8] :bus.dat_s2m[15:8];
+assign data_tmp[7:0]   = bus.sel[1]?bus.dat_m2s[7:0]  :bus.dat_s2m[7:0];
 
 InferableDualPortRAM
 #(
@@ -28,7 +28,7 @@ InferableDualPortRAM
 myRAM
 (
    .dat_in  (data_tmp),
-   .dat_out (bus.dat_s2m[31:8]),
+   .dat_out (bus.dat_s2m[23:0]),
    .dat_ro  (data),
    .addr    (bus.adr[addr_width-1:2]),
    .addr_ro (addr),
@@ -38,7 +38,7 @@ myRAM
 );
 
 //Last byte is not used
-assign bus.dat_s2m[7:0] = 'd0;
+assign bus.dat_s2m[31:24] = 'd0;
 assign r = data[23:16];
 assign g = data[15:8];
 assign b = data[7:0];

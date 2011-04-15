@@ -55,3 +55,11 @@ inline void spr_int_disable()
    SR &= ~SPR_SR_IEE;
    setSPR( SPR_SR, SR );
 }
+
+inline void spr_ic_enable()
+{
+   unsigned long SR;
+   getSPR( SPR_SR, SR );
+   SR |= SPR_SR_ICE;
+   setSPR( SPR_SR, SR );
+}
