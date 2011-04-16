@@ -142,6 +142,7 @@ module wb_trafficcop_b3
    parameter masters = 3
 )
 (
+   input               clk,
    wishbone_b3.slave   master [masters],
    wishbone_b3.master  slave
 );
@@ -156,8 +157,16 @@ assign req = //Would be awsome in for loop if Quartus didn't crash.
       master[0].cyc
    };
 
-logic [oitBits(masters)-1:0] req_num;
-priority_encoder #($bits(req),$bits(req_num)) enc ( req, req_num );
+logic [oitBits(masters)-1:0] req_nextnum, req_num;
+priority_encoder #($bits(req),$bits(req_num)) enc ( req, req_nextnum );
+
+always_ff@(posedge clk)
+begin
+   if( req[req_num] )
+      req_num = req_num;
+   else
+      req_num = req_nextnum;
+end
 
 logic [32+3-1:0] m0_out, m1_out, m2_out, slave_out;
 assign {master[0].dat_s2m, master[0].ack, master[0].err, master[0].rty} = m0_out;

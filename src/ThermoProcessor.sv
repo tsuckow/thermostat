@@ -65,6 +65,7 @@ wb_trafficcop_b3
 )
 cop
 (
+   .clk( wb_clk ),
    .master( masters ),
    .slave( wb_trafficcop )
 );
@@ -113,41 +114,6 @@ ram
    .clk( wb_clk ),
    .rst( wb_rst ),
    .bus( slaves[1].slave )//wb_boot_rom )
-);
-
-lcd::color bufcolor [1:0];
-//
-// Touchscreen
-wb_color_ram
-#(
-   .addr_width (12)
-)
-buf1
-(
-   .clk( wb_clk ),
-   .clk2( buf_clk ),
-   .rst( wb_rst ),
-   .bus( slaves[3].slave ),
-   .addr(buf_addr),
-   .r(bufcolor[0].r),
-   .g(bufcolor[0].g),
-   .b(bufcolor[0].b)
-);
-
-wb_color_ram
-#(
-   .addr_width (12)
-)
-buf2
-(
-   .clk( wb_clk ),
-   .clk2( buf_clk ),
-   .rst( wb_rst ),
-   .bus( slaves[4].slave ),
-   .addr(buf_addr),
-   .r(bufcolor[1].r),
-   .g(bufcolor[1].g),
-   .b(bufcolor[1].b)
 );
 
 wb_connector sdr_connector ( .master(sdr_bus), .slave(slaves[2]) );

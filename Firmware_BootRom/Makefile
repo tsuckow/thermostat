@@ -10,7 +10,7 @@ OBJC = $(CROSS_COMPILE)objcopy
 
 LIBPATH = /home/Deathbob/toolchain/toolchain-out/or32-linux/lib
 
-CFLAGS  = -O2 -g -c -Wunknown-pragmas -mhard-mul -msoft-div -msoft-float -O3
+CFLAGS  = -g -c -Wunknown-pragmas -mhard-mul -msoft-div -msoft-float -O3
 LD_FLAGS= --stats -Tram.ld -L $(LIBPATH) -lstdc++
 INCL    = test.h spr_defs.h touchscreen.h
 LIBS    =

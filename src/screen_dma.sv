@@ -37,7 +37,7 @@ begin
          RUNNING:
             begin
                state = (bus.err || bus.rty || (counter==799 && inc))?IDLE:RUNNING;
-               counter = inc?counter+1:counter;
+               counter = inc?counter + 1'd1:counter;
             end
       endcase
    end
@@ -61,12 +61,6 @@ begin
    endcase
 end
 
-logic [23:0] readbuffer;
-always_ff@(posedge clk)
-begin
-   readbuffer = bus.dat_s2m[23:0];
-end
-
 assign bus.dat_m2s = 0;
 assign bus.we      = 0;
 assign bus.cti     = 3'b111;
@@ -86,11 +80,11 @@ InferableDualPortRAM
 )
 myRAM
 (
-   .dat_in  (readbuffer),
+   .dat_in  (bus.dat_s2m[23:0]),
    .dat_ro  (buffer_out_tmp),
    .addr    (counter),
    .addr_ro (buffer_addr),
-   .we      (bus.ack),
+   .we      (bus.cyc && bus.ack),
    .clk     (~clk),
    .clk2    (buffer_clk)
 );

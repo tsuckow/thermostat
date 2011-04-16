@@ -7,7 +7,7 @@
 
 module SeniorProject
 (
-clk_in,
+clock_board,
 buttons,
 led_out,
 debug,
@@ -26,7 +26,7 @@ sdr_data,
 sdr_clk
 );
 
-input          clk_in          /* synthesis altera_chip_pin_lc="@G21" */;
+input          clock_board     /* synthesis altera_chip_pin_lc="@G21" */;
 input  [2:0]   buttons         /* synthesis altera_chip_pin_lc="@F1, @G3, @H2" */;
 input  [1:0]   GPIO0_CLKIN     /* synthesis altera_chip_pin_lc="@AA12, @AB12" */;	//	GPIO Connection 0 Clock In Bus
 output [1:0]   GPIO0_CLKOUT    /* synthesis altera_chip_pin_lc="@AA3, @AB3" */;		//	GPIO Connection 0 Clock Out Buss
@@ -45,10 +45,12 @@ output       sdr_clk           /* synthesis altera_chip_pin_lc="@E5" */;
 // Clock Divider
 //
 
-wire clock_30khz, clock_33khz, clock_25mhz, clock_20khz, clock_over;
+GLOBAL inputclk (.in(clock_board), .out(clock_50mhz));
+
+wire clock_50mhz, clock_30khz, clock_33khz, clock_25mhz, clock_20khz, clock_over;
 ClockDiv divider
 (
-   .inclk0(clk_in),
+   .inclk0(clock_50mhz),
    .c0    (clock_25mhz),
    .c1    (clock_30khz),
    .c2    (clock_20khz)
@@ -56,13 +58,13 @@ ClockDiv divider
 
 pll2 master_divider
 (
-   .inclk0(clk_in),
+   .inclk0(clock_50mhz),
    .c0    (clock_33khz)
 );
 
 PLLFAST clkmult
 (
-   .inclk0(clk_in),
+   .inclk0(clock_50mhz),
    .c0    (clock_over)
 );
 
@@ -74,7 +76,7 @@ oitClockDivider #(30_000, 0.5) slow ( clock_30khz, clock_slow );
 //
 
 logic reset;
-POR #( .delay( 8 ) ) poweron ( .clk( clock_slow ), .rst( reset ) );
+POR #( .delay( 4 ) ) poweron ( .clk( clock_slow ), .rst( reset ) );
 
 //
 // Touch Screen
@@ -97,7 +99,7 @@ assign adc_ltm_sclk	= ( adc_dclk & ltm_3wirebusy_n )  |  ( ~ltm_3wirebusy_n & lt
 
 lcd_spi_cotroller	u1	(	
 					// Host Side
-					.iCLK(clk_in),
+					.iCLK(clock_50mhz),
 					.spiCLK(clock_20khz),
 					.iRST_n(~reset),
 					// 3wire Side
@@ -114,7 +116,7 @@ wire [1:0] touchdiag;
 wire touching;
 // Touch Screen Digitizer ADC configuration //
 touch_controller touchc(
-					.iCLK(clk_in),
+					.iCLK(clock_50mhz),
 					.iRST_n(~reset),
 					.oADC_DIN(adc_din),
 					.oADC_DCLK(adc_dclk),
@@ -129,7 +131,7 @@ touch_controller touchc(
 
 reg [9:0] count;
 reg touching2;
-always@(posedge clk_in)
+always@(posedge clock_50mhz)
 begin
 	if( touching & ~touching2 )
 		count = count + 10'd1;
@@ -156,7 +158,7 @@ logic [9:0] buf_addr;
 assign buf_addr = xCoord;
 
 logic lcd_clk;
-oitClockDivider #(25_000_000, 4_000_000) lcdclk ( clock_25mhz, lcd_clk );
+oitClockDivider #(25_000_000, 2_000_000) lcdclk ( clock_25mhz, lcd_clk );
 //assign lcd_clk = clock_33khz;
 
 		
@@ -261,7 +263,7 @@ IntellitecThermostatControl tc (clock_30khz, ac1, ac2, f1O, f1H, f2O, f2H, ht1, 
 output [9:0] led_out /* synthesis altera_chip_pin_lc="@B1, @B2, @C2, @C1, @E1, @F2, @H1, @J3, @J2, @J1" */;
 //assign led_out = {signal.mt12, signal.mt2, signal.tm4, signal.tm2, 4'd0,clock_30khz, clock_33khz};
 //assign led_out = y_coord;
-assign led_out = {sig_tick, count[8:0]};
+assign led_out = {sig_tick, clock_over, count[7:0]};
 //assign debug = {item/*sync12, 3'd0*/, signal.mt12, signal.mt2, signal.tm4, signal.tm2};
 
 
@@ -275,7 +277,7 @@ wire sig_tick;
 lcd::color bufcolor;
 ThermoProcessor proc
 (
-   .clock(clk_in),
+   .clock(clock_25mhz),
    .rst( reset),
    .ooo( sig_tick ),
 //   .buf_clk(lcd_clk),
@@ -292,7 +294,7 @@ assign ltm_b = bufcolor.b;
 
 screen_dma myLCDDMA
 (
-   .clk(clk_in),
+   .clk(clock_25mhz),
    .rst(reset),
    .buffer_addr(xCoord),
    .buffer_out(bufcolor),
@@ -304,7 +306,7 @@ screen_dma myLCDDMA
 
 wb_sdram16 sdr
 (
-   .clk(clk_in),
+   .clk(clock_25mhz),
    .rst(reset),
    .bus(sdr_bus),
    .ba(sdr_ba),
@@ -315,8 +317,8 @@ wb_sdram16 sdr
    .cke(sdr_cke),
    .cs_n(sdr_cs_n),
    .dqm(sdr_dqm),
-   .data(sdr_data)
+   .data(sdr_data),
+   .clk_out( sdr_clk )
 );
-assign       sdr_clk = clk_in;
 
 endmodule
