@@ -6,7 +6,7 @@
 //
 
 module SeniorProject
-(
+(/*
 clock_board,
 buttons,
 led_out,
@@ -23,24 +23,30 @@ sdr_cke,
 sdr_cs_n,
 sdr_dqm,
 sdr_data,
-sdr_clk
-);
+sdr_clk,
+spi_out
+);*/
 
-input          clock_board     /* synthesis altera_chip_pin_lc="@G21" */;
-input  [2:0]   buttons         /* synthesis altera_chip_pin_lc="@F1, @G3, @H2" */;
-input  [1:0]   GPIO0_CLKIN     /* synthesis altera_chip_pin_lc="@AA12, @AB12" */;	//	GPIO Connection 0 Clock In Bus
-output [1:0]   GPIO0_CLKOUT    /* synthesis altera_chip_pin_lc="@AA3, @AB3" */;		//	GPIO Connection 0 Clock Out Buss
-inout  [31:0]  GPIO0_DATA      /* synthesis altera_chip_pin_lc="@U7, @V5, @W6, @W7, @V8, @T8, @W10, @Y10, @V11, @R10, @V12, @U13, @W13, @Y13, @U14, @V14, @AA4, @AB4, @AA5, @AB5, @AA8, @AB8, @AA10, @AB10, @AA13, @AB13, @AB14, @AA14, @AB15, @AA15, @AA16, @AB16" */;	//	GPIO Connection 0 Data Bus
-output [1:0] sdr_ba            /* synthesis altera_chip_pin_lc="@A4, @B5" */;
-output[12:0] sdr_addr          /* synthesis altera_chip_pin_lc="@C8, @A7, @B4, @B7, @C7, @A6, @B6, @C6, @A5, @C3, @B3, @A3, @C4" */;
-output       sdr_ras_n         /* synthesis altera_chip_pin_lc="@F7" */;
-output       sdr_cas_n         /* synthesis altera_chip_pin_lc="@G8" */;
-output       sdr_we_n          /* synthesis altera_chip_pin_lc="@D6" */;
-output       sdr_cke           /* synthesis altera_chip_pin_lc="@E6" */;
-output       sdr_cs_n          /* synthesis altera_chip_pin_lc="@G7" */;
-output [1:0] sdr_dqm           /* synthesis altera_chip_pin_lc="@B8, @E7" */;
-inout [15:0] sdr_data          /* synthesis altera_chip_pin_lc="@F10, @E10, @A10, @B10, @C10, @A9, @B9, @A8, @F8, @H9, @G9, @F9, @E9, @H10, @G10, @D10" */;
-output       sdr_clk           /* synthesis altera_chip_pin_lc="@E5" */;
+input          clock_board     /* ssynthesis altera_chip_pin_lc="@G21" */,
+input  [2:0]   buttons         /* ssynthesis altera_chip_pin_lc="@F1, @G3, @H2" */,
+input  [1:0]   GPIO0_CLKIN     /* ssynthesis altera_chip_pin_lc="@AA12, @AB12" */,
+output [1:0]   GPIO0_CLKOUT    /* ssynthesis altera_chip_pin_lc="@AA3, @AB3" */,
+inout  [31:0]  GPIO0_DATA      /* ssynthesis altera_chip_pin_lc="@U7, @V5, @W6, @W7, @V8, @T8, @W10, @Y10, @V11, @R10, @V12, @U13, @W13, @Y13, @U14, @V14, @AA4, @AB4, @AA5, @AB5, @AA8, @AB8, @AA10, @AB10, @AA13, @AB13, @AB14, @AA14, @AB15, @AA15, @AA16, @AB16" */,
+output [1:0] sdr_ba            /* ssynthesis altera_chip_pin_lc="@A4, @B5" */,
+output[12:0] sdr_addr          /* ssynthesis altera_chip_pin_lc="@C8, @A7, @B4, @B7, @C7, @A6, @B6, @C6, @A5, @C3, @B3, @A3, @C4" */,
+output       sdr_ras_n         /* ssynthesis altera_chip_pin_lc="@F7" */,
+output       sdr_cas_n         /* ssynthesis altera_chip_pin_lc="@G8" */,
+output       sdr_we_n          /* ssynthesis altera_chip_pin_lc="@D6" */,
+output       sdr_cke           /* ssynthesis altera_chip_pin_lc="@E6" */,
+output       sdr_cs_n          /* ssynthesis altera_chip_pin_lc="@G7" */,
+output [1:0] sdr_dqm           /* ssynthesis altera_chip_pin_lc="@B8, @E7" */,
+inout [15:0] sdr_data          /* ssynthesis altera_chip_pin_lc="@F10, @E10, @A10, @B10, @C10, @A9, @B9, @A8, @F8, @H9, @G9, @F9, @E9, @H10, @G10, @D10" */,
+output       sdr_clk           /* ssynthesis altera_chip_pin_lc="@E5" */,
+spi.master   spi_out,
+//output [7:0] debug /* ssynthesis altera_chip_pin_lc="@T10, @T9, @U8, @V7, @U10, @U9, @Y7, @V6" */;
+output [9:0] led_out, /* ssynthesis altera_chip_pin_lc="@B1, @B2, @C2, @C1, @E1, @F2, @H1, @J3, @J2, @J1" */
+cfi.master   flash_out
+);
 //
 // Clock Divider
 //
@@ -48,6 +54,8 @@ output       sdr_clk           /* synthesis altera_chip_pin_lc="@E5" */;
 GLOBAL inputclk (.in(clock_board), .out(clock_50mhz));
 
 wire clock_50mhz, clock_30khz, clock_33khz, clock_25mhz, clock_20khz, clock_over;
+logic lcd_clk;
+logic lock;
 ClockDiv divider
 (
    .inclk0(clock_50mhz),
@@ -65,18 +73,49 @@ pll2 master_divider
 PLLFAST clkmult
 (
    .inclk0(clock_50mhz),
-   .c0    (clock_over)
+   .c0    (clock_over),
+   .c1    (lcd_clk),
+   .locked(lock)
 );
 
 wire clock_slow;
 oitClockDivider #(30_000, 0.5) slow ( clock_30khz, clock_slow );
+
+cfi cfi_proc();
+cfi cfi_prog();
+logic cfi_request;
+
+cfi_arbitrator cfi_arb
+(
+   .request(cfi_request),
+   .out(flash_out),
+   .normal(cfi_proc),
+   .requester(cfi_prog)
+);
+
+//
+//Flash programmer
+//
+FlashLoader loader(
+   .pfl_flash_access_granted(1'b1),
+   .pfl_nreset(1'b1),
+   .flash_addr(cfi_prog.addr),
+   .flash_data(cfi_prog.dq),
+   .flash_nce(cfi_prog.ce_n),
+   .flash_noe(cfi_prog.oe_n),
+   .flash_nwe(cfi_prog.we_n),
+   .pfl_flash_access_request(cfi_request)
+);
+assign cfi_prog.byte_n = 1'b1;
+assign cfi_prog.wp_n   = 1'b1;
+assign cfi_prog.reset_n= 1'b1;
 
 //
 // Power On Reset
 //
 
 logic reset;
-POR #( .delay( 4 ) ) poweron ( .clk( clock_slow ), .rst( reset ) );
+POR #( .delay( 4 ) ) poweron ( .clk( clock_slow ), .en(lock && !cfi_request), .rst( reset ) );
 
 //
 // Touch Screen
@@ -139,8 +178,6 @@ begin
 	touching2 = touching;
 end
 
-	//assign debug = {clock_25mhz, ltm_hd, ltm_vd, ltm_den};//{touchdiag ,ltm_scen,adc_din, adc_dclk, adc_dout, adc_busy, adc_penirq_n};
-	
 wire			ltm_hd;		
 wire			ltm_vd;		
 wire			ltm_den;
@@ -153,12 +190,11 @@ wire [8:0]      yCoord;
 wire	[7:0]	ltm_r;		//	LTM Red Data 8 Bits
 wire	[7:0]	ltm_g;		//	LTM Green Data 8 Bits
 wire	[7:0]	ltm_b;		//	LTM Blue Data 8 Bits
+wire ltm_yvalid;
+//logic [9:0] buf_addr;
+//assign buf_addr = xCoord;
 
-logic [9:0] buf_addr;
-assign buf_addr = xCoord;
-
-logic lcd_clk;
-oitClockDivider #(25_000_000, 2_000_000) lcdclk ( clock_25mhz, lcd_clk );
+//oitClockDivider #(25_000_000, 8_000_000) lcdclk ( clock_25mhz, lcd_clk );
 //assign lcd_clk = clock_33khz;
 
 		
@@ -171,7 +207,8 @@ lcd_timing_generator ltg
 		.oVD(ltm_vd),	
 		.oDEN(ltm_den),
 		.oXCoord(xCoord),
-		.oYCoord(yCoord)
+		.oYCoord(yCoord),
+      .ydisplay_area(ltm_yvalid)
 	);
 	
 	
@@ -226,9 +263,6 @@ assign	GPIO0_DATA[13:2] = GPIO_0[15:4];
 assign	GPIO0_DATA[31:15] = GPIO_0[35:19];
 assign	GPIO0_DATA[14] = GPIO_0[17];
 assign	GPIO0_CLKOUT = {GPIO_0[18],GPIO_0[16]};
-					
-output [7:0] debug /* synthesis altera_chip_pin_lc="@T10, @T9, @U8, @V7, @U10, @U9, @Y7, @V6" */;
-assign debug = 8'd0;
 
 IntellitecSignal signal();
 
@@ -259,12 +293,7 @@ assign ht2 = 1'b0;
 wire [3:0] item;
 wire [1:0] shed;
 IntellitecThermostatControl tc (clock_30khz, ac1, ac2, f1O, f1H, f2O, f2H, ht1, ht2, signal, sync12, shed, item);
-
-output [9:0] led_out /* synthesis altera_chip_pin_lc="@B1, @B2, @C2, @C1, @E1, @F2, @H1, @J3, @J2, @J1" */;
-//assign led_out = {signal.mt12, signal.mt2, signal.tm4, signal.tm2, 4'd0,clock_30khz, clock_33khz};
-//assign led_out = y_coord;
-assign led_out = {sig_tick, clock_over, count[7:0]};
-//assign debug = {item/*sync12, 3'd0*/, signal.mt12, signal.mt2, signal.tm4, signal.tm2};
+assign led_out = {2'd0,count[7:0]};
 
 
 //
@@ -272,20 +301,21 @@ assign led_out = {sig_tick, clock_over, count[7:0]};
 //
 wishbone_b3 sdr_bus ();
 wishbone_b3 lcd_bus ();
+wishbone_b3 sdr_bus_fast ();
 
-wire sig_tick;
+logic proc_clk;
+assign proc_clk = clock_50mhz;
+
 lcd::color bufcolor;
 ThermoProcessor proc
 (
-   .clock(clock_25mhz),
+   .clock(proc_clk),
    .rst( reset),
-   .ooo( sig_tick ),
-//   .buf_clk(lcd_clk),
-//   .buf_addr( buf_addr ),
-//   .bufcolor( bufcolor ),
    .lcd_bus( lcd_bus ),
    .sdr_bus( sdr_bus ),
-   .vsync( ltm_vd )
+   .spi_out,
+   .vsync( ltm_vd ),
+   .flash_out( cfi_proc )
 );
 
 assign ltm_r = bufcolor.r;
@@ -294,21 +324,31 @@ assign ltm_b = bufcolor.b;
 
 screen_dma myLCDDMA
 (
-   .clk(clock_25mhz),
+   .clk(proc_clk),
    .rst(reset),
    .buffer_addr(xCoord),
    .buffer_out(bufcolor),
-   .buffer_clk(lcd_clk),
+   .buffer_clk(~lcd_clk),
    .row(yCoord),
-   .hsync( ~ltm_hd ),
+   .hsync( ~ltm_hd && ltm_yvalid ),
    .bus( lcd_bus )
+);
+
+wb_bridge_fastmasterout
+sdbridge
+(
+   .clk_slave(proc_clk),
+   .clk_master(clock_over),
+   .rst(reset),
+   .slave( sdr_bus ),
+   .master( sdr_bus_fast )
 );
 
 wb_sdram16 sdr
 (
-   .clk(clock_25mhz),
+   .clk(clock_over),
    .rst(reset),
-   .bus(sdr_bus),
+   .bus(sdr_bus_fast),
    .ba(sdr_ba),
    .addr(sdr_addr),
    .ras_n(sdr_ras_n),

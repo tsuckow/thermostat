@@ -43,7 +43,9 @@ module lcd_timing_generator (
 						oVD,				// LCD Vertical sync 	
 						oDEN,				// LCD Data Enable
 						oXCoord,            // X Coordinate 
-						oYCoord             // Y Coordinate
+						oYCoord,             // Y Coordinate
+                  xdisplay_area, //Is X coord valid?
+                  ydisplay_area  //Is Y coord valid?
 						);
 //============================================================================
 // PARAMETER declarations
@@ -65,6 +67,8 @@ output			oVD;
 output			oDEN;
 output [9:0]    oXCoord;
 output [8:0]    oYCoord;
+output xdisplay_area;
+output ydisplay_area;
 
 //=============================================================================
 // REG/WIRE declarations
@@ -87,15 +91,21 @@ wire			display_area;
 
 					
 // This signal indicate if we are within the lcd display area
-assign	display_area = ((x_cnt>(Hsync_Back_Porch-1)&& //>215
-						(x_cnt<(H_LINE-Hsync_Front_Porch))&& //< 1016
-						(y_cnt>(Vertical_Back_Porch-1))&& 
-						(y_cnt<(V_LINE - Vertical_Front_Porch))
-						))  ? 1'b1 : 1'b0;
+assign xdisplay_area =
+   (
+      (x_cnt>(Hsync_Back_Porch-1+1)) && //>215
+      (x_cnt<(H_LINE-Hsync_Front_Porch)) //< 1016
+   );
+assign ydisplay_area =
+   (
+      (y_cnt>(Vertical_Back_Porch-1))&&
+      (y_cnt<(V_LINE - Vertical_Front_Porch))
+   );
+assign display_area = xdisplay_area && ydisplay_area;
 
 //Convert to screen coordinates
-assign	oXCoord = display_area?(x_cnt-Hsync_Back_Porch):10'd0;
-assign	oYCoord = display_area?(y_cnt-Vertical_Back_Porch):9'd0;
+assign oXCoord = xdisplay_area?(x_cnt-Hsync_Back_Porch+1):10'd0;
+assign oYCoord = ydisplay_area?(y_cnt-Vertical_Back_Porch):9'd0;
 
 ///////////////////////// x  y counter  and lcd hd generator //////////////////
 //X Pixel Count & Horizontal Sync

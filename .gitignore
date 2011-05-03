@@ -5,8 +5,11 @@
 *.o
 System.map
 *.dat
-*.ihex
+*.hex
 *.or32
+*.d
+*.map
+*.a
 
 #Quartus
 db/

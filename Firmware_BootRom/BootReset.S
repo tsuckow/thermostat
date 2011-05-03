@@ -85,7 +85,7 @@ ret_\name:
 
 .org 0x100 - 0x100 		// Sector .vectors start at 0x100
 
-
+.global _reset
 _reset:
 
 // Set stack pointer (r1) to 00003560

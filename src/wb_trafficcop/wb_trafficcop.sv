@@ -134,6 +134,18 @@ assign master.bte = slave.bte;
 
 endmodule
 
+module wb_nullslave
+(
+   wishbone_b3.slave slave
+);
+
+assign slave.dat_s2m = 'd0;
+assign slave.ack = 1'b0;
+assign slave.err = 1'b1;
+assign slave.rty = 1'b0;
+
+endmodule
+
 //
 // Acts as a traffic cop allowing multiple masters to coexist on the same bus.
 //

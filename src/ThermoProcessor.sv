@@ -2,13 +2,11 @@ module ThermoProcessor
 (
 input clock,
 input rst,
-output ooo,
-//input logic  buf_clk,
-//input [11:2] buf_addr,
-//output lcd::color bufcolor [1:0],
 wishbone_b3.master sdr_bus,
 wishbone_b3.slave lcd_bus,
-input vsync
+spi.master spi_out,
+input vsync,
+cfi.master flash_out
 );
 
 //Wishbone Common
@@ -81,44 +79,61 @@ expander
    .master( wb_trafficcop ),
    .slave( slaves ),
    .addrs( '{
-      '{32'h00000000,32'h00003FFF}, //Boot ROM
-      '{32'h00004000,32'h00004FFF}, //RAM
-      '{32'h01000000,32'h017FFFFF}, //Offchip RAM
-      '{32'hFFFF0000,32'hFFFF0FFF}, //Video Buffer 1
-      '{32'hFFFF4000,32'hFFFF4FFF}  //Video Buffer 2
+      '{32'h00000000,32'h003FFFFF}, //Boot ROM
+      '{32'h10004000,32'h10005FFF}, //RAM (Removed)
+      '{32'h02000000,32'h027FFFFF}, //Offchip RAM
+      '{32'hFFFF0000,32'hFFFF001F}, //SPI (SDCARD)
+      '{32'hFFFF4000,32'hFFFF4FFF}  //UNUSED
    } )
 );
 
 //
 // Boot ROM
-wb_rom
+/*wb_rom
 #(
    .data_width (32),
-   .addr_width (14)
+   .addr_width (16)
 )
 boot_rom
 (
    .clk( wb_clk ),
    .rst( wb_rst ),
-   .bus( slaves[0].slave )//wb_boot_rom )
+   .bus( slaves[0].slave )
+);*/
+wb_cfi_rom rom
+(
+   .clk( wb_clk ),
+   .rst( wb_rst ),
+   .wb( slaves[0] ),
+   .cfi( flash_out )
 );
 
 //
 // RAM
-wb_ram
+wb_nullslave ns0 ( slaves[1] );
+/*wb_ram
 #(
-   .addr_width (12)
+   .addr_width (13)
 )
 ram
 (
    .clk( wb_clk ),
    .rst( wb_rst ),
-   .bus( slaves[1].slave )//wb_boot_rom )
-);
+   .bus( slaves[1].slave )
+);*/
 
 wb_connector sdr_connector ( .master(sdr_bus), .slave(slaves[2]) );
 wb_connector lcd_connector ( .master(masters[2]), .slave(lcd_bus) );
-assign ooo = masters[0].adr[2]; //Inst
+
+spi_wrapper spi
+(
+   .clk( wb_clk ),
+   .rst( wb_rst ),
+   .slave( slaves[3] ),
+   .spi_out( spi_out )
+);
+
+wb_nullslave ns1 ( slaves[4] );
 
 endmodule
 

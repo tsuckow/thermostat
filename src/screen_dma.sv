@@ -10,7 +10,7 @@ input              hsync,
 wishbone_b3.master bus
 );
 
-localparam base_addr = 'h01000000;
+localparam base_addr = 'h02000000;
 
 typedef enum logic [0:0] { IDLE, RUNNING } State;
 State state;
@@ -64,7 +64,7 @@ end
 assign bus.dat_m2s = 0;
 assign bus.we      = 0;
 assign bus.cti     = 3'b111;
-assign bus.bte     = 1;
+assign bus.bte     = 0;
 assign bus.sel     = 4'b1111;
 
 //
@@ -85,7 +85,7 @@ myRAM
    .addr    (counter),
    .addr_ro (buffer_addr),
    .we      (bus.cyc && bus.ack),
-   .clk     (~clk),
+   .clk     (clk),
    .clk2    (buffer_clk)
 );
 

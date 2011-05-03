@@ -1,0 +1,13 @@
+#$(call buildexe,boot.or32,main.o BootReset.o test.o touchscreen.o exception.o,,-Lfs -lefsl,fs/libefsl.a)
+$(call buildexe,boot.or32,main.o BootReset.o test.o touchscreen.o exception.o fs/libefsl.a)
+
+boot.dat: boot.hex
+	perl hex2v.pl < boot.hex > boot.dat
+
+boot.pof: boot.hex boot.cof
+	/cygdrive/c/altera/10.1sp1/quartus/bin/quartus_cpf.exe -c boot.cof
+	
+boot.hex: ./boot.or32
+	$(OBJCOPY) -O ihex ./boot.or32 boot.hex
+	
+CLEAN := $(CLEAN) $d/boot.dat $d/boot.ihex

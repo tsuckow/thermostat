@@ -23,7 +23,7 @@
 
 # Clock constraints
 
-create_clock -name "Clock" -period 20.000ns [get_ports {clk_in}]
+create_clock -name "Clock" -period 20.000ns [get_ports {clock_board}]
 create_clock -name "SPIClock" -period 160.000ns [get_ports {GPIO0_CLKIN[1]}]
 
 

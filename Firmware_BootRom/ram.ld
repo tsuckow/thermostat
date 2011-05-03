@@ -1,10 +1,11 @@
-/* Use internal memory*/
+ENTRY(_reset)
 
 MEMORY    
 {
     vectors     : ORIGIN = 0x00000100, LENGTH = 0x00002000 - 0x100
-    flash       : ORIGIN = 0x00002000, LENGTH = 0x00002000
-    ram         : ORIGIN = 0x00004000, LENGTH = 0x00001000
+    flash       : ORIGIN = 0x00002000, LENGTH = 0x0000E000
+    /*ram         : ORIGIN = 0x10004000, LENGTH = 0x00002000*/
+	ram         : ORIGIN = 0x02200000, LENGTH = 0x00002000
 }
  
 /*
@@ -19,9 +20,22 @@ SECTIONS
 {
     .vectors :   { *(.vectors) }    > vectors
 
-    .text :	{ *(.text) }        > flash
-    .rodata :   { *(.rodata)}       > flash
-    .data :     { *(.data)  }       > ram
+    .text :
+	{
+		*(.text .text.*)
+	} > flash
+	
+    .rodata :
+	{
+		*(.rodata .rodata.*)
+	} > flash
+	
+	/* This does not actually get initilized */
+	.data :
+	{
+		KEEP(*(.data))
+	} > ram AT> flash
+	
     .bss :      { *(.bss)   }       > ram
      
     .stack ALIGN(0x4): /*Word Align*/
