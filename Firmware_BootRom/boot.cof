@@ -3,8 +3,8 @@
 	<eprom_name>CFI_32MB</eprom_name>
 	<output_filename>boot.pof</output_filename>
 	<n_pages>0</n_pages>
-	<width>1</width>
-	<mode>6</mode>
+	<width>3</width>
+	<mode>8</mode>
 	<hex_block>
 		<hex_filename>boot.hex</hex_filename>
 		<hex_addressing>absolute</hex_addressing>

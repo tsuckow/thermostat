@@ -1,6 +1,10 @@
 .SUFFIXES:            # Delete the default suffixes
 
-PATH += :/home/Deathbob/toolchain/toolchain-out/bin
+TOOLCHAIN ?= $(HOME)/toolchain/toolchain-out
+SYSROOT   ?= $(TOOLCHAIN)/or32-linux/sys-root/
+
+PATH += :$(TOOLCHAIN)/bin
+#PATH := $(TOOLCHAIN)/bin:$(PATH)
 
 CROSS_COMPILE = or32-linux-
 CC = $(CROSS_COMPILE)gcc
@@ -13,12 +17,15 @@ AR = $(CROSS_COMPILE)ar
 
 ### Build flags for all targets
 #
-CF_ALL          = -g -c -Wunknown-pragmas -mhard-mul -mhard-div -msoft-float -O3 -I fs/inc
-LF_ALL          = -Bstatic -static --stats -L $(LIBPATH)
-LL_ALL          = -lstdc++
+CF_ALL          = -g -c -Wunknown-pragmas -mhard-mul -mhard-div -msoft-float -I fs/inc --sysroot $(SYSROOT) -O3
+LF_ALL          = -Bstatic -static --stats $(LIBPATH) --sysroot $(SYSROOT)
+LL_ALL          = -lc -lgcc #-lstdc++ -lc -lgcc
 COMPLINK = $(CXX) $(CF_ALL) $(CF_TGT) $(LF_ALL) $(LF_TGT) -o $@ $< $(LL_TGT) $(LL_ALL)
 
-LIBPATH = /home/Deathbob/toolchain/toolchain-out/or32-linux/lib
+LIBPATH = -L=/usr/lib
+#LIBPATH  = -L $(TOOLCHAIN)/or32-linux/lib
+#LIBPATH += -L $(TOOLCHAIN)/or32-linux/sys-root/usr/lib/
+LIBPATH += -L $(TOOLCHAIN)/lib/gcc/or32-linux/4.5.1-or32-1.0rc4/
 
 .PHONY: all
 all: realall
