@@ -3,9 +3,9 @@ ENTRY(_reset)
 MEMORY    
 {
     vectors     : ORIGIN = 0x00000100, LENGTH = 0x00002000 - 0x100
-    flash       : ORIGIN = 0x00002000, LENGTH = 0x0000E000
+    flash       : ORIGIN = 0x00002000, LENGTH = 0x00020000
     /*ram         : ORIGIN = 0x10004000, LENGTH = 0x00002000*/
-	ram         : ORIGIN = 0x02200000, LENGTH = 0x00002000
+	ram         : ORIGIN = 0x02200000, LENGTH = 0x00600000
 }
  
 /*
@@ -41,7 +41,7 @@ SECTIONS
     .stack ALIGN(0x4): /*Word Align*/
     {
         __STACK_TOP    = . ;
-        . = . + 0x00000500;
+        . = . + 0x00001000;
         __STACK_BOTTOM = . ;
     }                               > ram
 }

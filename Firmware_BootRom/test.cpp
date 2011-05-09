@@ -19,6 +19,7 @@ int test(int bob)
    return mine.doit(bob) + 23;
 }
 
+/*
 long exception_system_call(long arg1, long arg2, long arg3, long arg4, long arg5, long arg6)
 {
    register long code __asm__ ("r11");
@@ -29,3 +30,4 @@ long exception_system_call(long arg1, long arg2, long arg3, long arg4, long arg5
    }
    return 0;
 }
+*/

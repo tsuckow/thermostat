@@ -46,7 +46,10 @@ size_t const SPI_DIV  = 5;
 size_t const SPI_SS   = 6;
 
 uint32_t const SPI_CTRL_ASS  = (1 << 13); //Auto Slave Select
+uint32_t const SPI_CTRL_TXNEG= (1 << 10);
+uint32_t const SPI_CTRL_RXNEG= (1 << 9);
 uint32_t const SPI_CTRL_BUSY = (1 << 8);  //Busy Flag/Start XFER
+
 
 #ifndef HW_ENDPOINT_OPENRISC_SD
 #error "HW_ENDPOINT_OPENRISC_SD has to be defined in config.h"
@@ -111,7 +114,7 @@ esint8 if_initInterface(hwInterface* file, eint8* opts)
 	DBG((TXT("Drive Size is %lu Bytes (%lu Sectors)\n"), sc, file->sectorCount));
 	
 	 /* increase speed after init */
-	if_spiSetSpeed(8);
+	if_spiSetSpeed(100);
 	// if_spiSetSpeed(100); /* debug - slower */
 	
 	DBG((TXT("Init done...\n")));
@@ -145,6 +148,7 @@ void if_spiInit(hwInterface *iface)
 	if_ss_manual();
 	
 	SPI[SPI_CTRL] |= 8; //8 bit transfers
+	SPI[SPI_CTRL] |= SPI_CTRL_TXNEG; //Transmit changes on negedge / Latch Pos edge
 	
 	// low speed during init
 	if_spiSetSpeed(254); 

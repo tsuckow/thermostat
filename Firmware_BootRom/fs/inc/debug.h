@@ -123,6 +123,15 @@
 	void debug_sendByte(euint8 data );
 	#endif
 
+   #ifndef DBG
+      void efsl_debug(unsigned char const * format, ...);
+      #define DBG(x) efsl_debug x
+   #endif
+
+   #ifndef TXT
+      #define TXT(x) x
+   #endif
+
 #endif
 
 #endif

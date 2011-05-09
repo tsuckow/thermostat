@@ -14,7 +14,10 @@ extern "C"
       uint8_t b;
    } color;
 */
-   void setPixel(long num, uint32_t clr);
+   extern uint8_t const charROM[256][8] asm("_binary_font_pf_start");
+   static volatile uint32_t (* const SCREEN)[800] = (volatile uint32_t (* const)[800])0x02000000;
+
+   void printString(unsigned x, unsigned y, unsigned char const * str);
 
 #ifdef __cplusplus
 }
