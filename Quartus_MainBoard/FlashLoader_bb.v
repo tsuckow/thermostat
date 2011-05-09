@@ -56,8 +56,8 @@ endmodule
 // CNX file retrieval info
 // ============================================================
 // Retrieval info: PRIVATE: DISABLE_CRC_CHECKBOX STRING "1"
-// Retrieval info: PRIVATE: IDC_ENHANCED_FLASH_PROGRAMMING_COMBO STRING "Area"
-// Retrieval info: PRIVATE: IDC_FIFO_SIZE_COMBO STRING "16"
+// Retrieval info: PRIVATE: IDC_ENHANCED_FLASH_PROGRAMMING_COMBO STRING "Speed"
+// Retrieval info: PRIVATE: IDC_FIFO_SIZE_COMBO STRING "32"
 // Retrieval info: PRIVATE: IDC_FLASH_DATA_WIDTH_COMBO STRING "16 bits"
 // Retrieval info: PRIVATE: IDC_FLASH_DEVICE_COMBO STRING "CFI 32 Mbit"
 // Retrieval info: PRIVATE: IDC_FLASH_NRESET_CHECKBOX STRING "0"
@@ -68,10 +68,10 @@ endmodule
 // Retrieval info: PRIVATE: TRISTATE_CHECKBOX STRING "1"
 // Retrieval info: CONSTANT: ADDR_WIDTH NUMERIC "21"
 // Retrieval info: CONSTANT: DISABLE_CRC_CHECKBOX NUMERIC "0"
-// Retrieval info: CONSTANT: ENHANCED_FLASH_PROGRAMMING NUMERIC "0"
+// Retrieval info: CONSTANT: ENHANCED_FLASH_PROGRAMMING NUMERIC "1"
 // Retrieval info: CONSTANT: FEATURES_CFG NUMERIC "0"
 // Retrieval info: CONSTANT: FEATURES_PGM NUMERIC "1"
-// Retrieval info: CONSTANT: FIFO_SIZE NUMERIC "16"
+// Retrieval info: CONSTANT: FIFO_SIZE NUMERIC "32"
 // Retrieval info: CONSTANT: FLASH_DATA_WIDTH NUMERIC "16"
 // Retrieval info: CONSTANT: FLASH_NRESET_CHECKBOX NUMERIC "0"
 // Retrieval info: CONSTANT: FLASH_TYPE STRING "CFI_FLASH"

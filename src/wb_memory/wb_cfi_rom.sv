@@ -74,7 +74,7 @@ begin
    else
    begin
       if( cs && counter <= 8 )
-         counter = counter + 1;
+         counter = counter + 1'b1;
       else
          counter = 'd0;
    end
