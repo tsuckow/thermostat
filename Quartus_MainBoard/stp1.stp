@@ -1,60 +1,718 @@
 <session jtag_chain="USB-Blaster [USB-0]" jtag_device="@1: EP3C16/EP4CE15 (0x020F20DD)" sof_file="SeniorProject.sof">
   <display_tree gui_logging_enabled="0">
-    <display_branch instance="auto_signaltap_0" log="USE_GLOBAL_TEMP" signal_set="USE_GLOBAL_TEMP" trigger="USE_GLOBAL_TEMP"/>
+    <display_branch instance="auto_signaltap_0" signal_set="USE_GLOBAL_TEMP" trigger="USE_GLOBAL_TEMP"/>
   </display_tree>
   <instance entity_name="sld_signaltap" is_auto_node="yes" is_expanded="true" name="auto_signaltap_0" source_file="sld_signaltap.vhd">
     <node_ip_info instance_id="0" mfg_id="110" node_id="0" version="6"/>
     <position_info>
-      <single attribute="active tab" value="0"/>
-      <single attribute="data horizontal scroll position" value="0"/>
+      <single attribute="active tab" value="1"/>
+      <single attribute="data horizontal scroll position" value="1435"/>
       <single attribute="data vertical scroll position" value="0"/>
       <single attribute="setup horizontal scroll position" value="0"/>
       <single attribute="setup vertical scroll position" value="0"/>
       <single attribute="zoom level denominator" value="1"/>
-      <single attribute="zoom level numerator" value="1"/>
+      <single attribute="zoom level numerator" value="1024"/>
       <single attribute="zoom offset denominator" value="1"/>
-      <single attribute="zoom offset numerator" value="122880"/>
+      <single attribute="zoom offset numerator" value="112"/>
+      <multi attribute="timebars" size="1" value="1443"/>
     </position_info>
-    <signal_set global_temp="1" name="signal_set: 2011/05/04 00:14:43  #0">
-      <clock name="clock_board" polarity="posedge" tap_mode="classic"/>
-      <config ram_type="M4K" reserved_data_nodes="0" reserved_storage_qualifier_nodes="0" reserved_trigger_nodes="0" sample_depth="8192" trigger_in_enable="no" trigger_out_enable="no"/>
+    <signal_set global_temp="1" name="signal_set: 2011/05/20 01:27:05  #0">
+      <clock name="ThermoProcessor:proc|clock" polarity="posedge" tap_mode="classic"/>
+      <config ram_type="M4K" reserved_data_nodes="0" reserved_storage_qualifier_nodes="0" reserved_trigger_nodes="0" sample_depth="2048" trigger_in_enable="no" trigger_out_enable="no"/>
       <top_entity/>
       <signal_vec>
         <trigger_input_vec>
-          <wire alias="Reset" name="ThermoProcessor:proc|rst" tap_mode="classic" type="combinatorial"/>
-          <wire name="cfi_arbitrator:cfi_arb|request" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|slaves[0].stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|slaves[1].stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|slaves[2].stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|slaves[3].stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|slaves[4].stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|slaves[5].stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|output_data[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|output_data[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|output_data[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.ack" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[10]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[11]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[12]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[13]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[14]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[15]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[16]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[17]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[18]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[19]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[20]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[21]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[22]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[23]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[24]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[25]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[26]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[27]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[28]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[29]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[30]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[31]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[6]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[7]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[8]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[9]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.cyc" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[10]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[11]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[12]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[13]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[14]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[15]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[16]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[17]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[18]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[19]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[20]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[21]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[22]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[23]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[24]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[25]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[26]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[27]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[28]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[29]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[30]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[31]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[6]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[7]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[8]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[9]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[10]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[11]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[12]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[13]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[14]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[15]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[16]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[17]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[18]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[19]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[20]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[21]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[22]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[23]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[24]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[25]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[26]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[27]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[28]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[29]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[30]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[31]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[6]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[7]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[8]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[9]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.err" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.rty" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.sel[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.sel[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.sel[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.sel[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.we" tap_mode="classic" type="combinatorial"/>
         </trigger_input_vec>
         <data_input_vec>
-          <wire alias="Reset" name="ThermoProcessor:proc|rst" tap_mode="classic" type="combinatorial"/>
-          <wire name="cfi_arbitrator:cfi_arb|request" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|slaves[0].stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|slaves[1].stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|slaves[2].stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|slaves[3].stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|slaves[4].stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|slaves[5].stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|output_data[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|output_data[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|output_data[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.ack" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[10]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[11]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[12]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[13]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[14]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[15]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[16]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[17]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[18]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[19]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[20]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[21]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[22]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[23]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[24]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[25]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[26]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[27]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[28]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[29]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[30]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[31]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[6]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[7]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[8]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[9]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.cyc" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[10]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[11]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[12]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[13]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[14]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[15]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[16]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[17]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[18]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[19]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[20]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[21]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[22]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[23]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[24]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[25]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[26]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[27]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[28]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[29]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[30]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[31]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[6]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[7]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[8]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[9]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[10]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[11]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[12]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[13]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[14]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[15]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[16]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[17]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[18]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[19]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[20]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[21]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[22]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[23]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[24]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[25]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[26]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[27]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[28]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[29]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[30]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[31]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[6]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[7]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[8]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[9]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.err" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.rty" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.sel[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.sel[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.sel[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.sel[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.we" tap_mode="classic" type="combinatorial"/>
         </data_input_vec>
         <storage_qualifier_input_vec>
-          <wire name="cfi_arbitrator:cfi_arb|request" tap_mode="classic" type="combinatorial"/>
+          <wire name="IntellitecThermostatControl:tc|ac1" tap_mode="classic" type="combinatorial"/>
+          <wire name="IntellitecThermostatControl:tc|ac2" tap_mode="classic" type="combinatorial"/>
+          <wire name="IntellitecThermostatControl:tc|f1H" tap_mode="classic" type="combinatorial"/>
+          <wire name="IntellitecThermostatControl:tc|f1O" tap_mode="classic" type="combinatorial"/>
+          <wire name="IntellitecThermostatControl:tc|f2H" tap_mode="classic" type="combinatorial"/>
+          <wire name="IntellitecThermostatControl:tc|f2O" tap_mode="classic" type="combinatorial"/>
+          <wire name="IntellitecThermostatControl:tc|ht1" tap_mode="classic" type="combinatorial"/>
+          <wire name="IntellitecThermostatControl:tc|ht2" tap_mode="classic" type="combinatorial"/>
+          <wire name="IntellitecThermostatControl:tc|it.mt12" tap_mode="classic" type="combinatorial"/>
+          <wire name="IntellitecThermostatControl:tc|it.mt2" tap_mode="classic" type="combinatorial"/>
+          <wire name="IntellitecThermostatControl:tc|it.tm2" tap_mode="classic" type="combinatorial"/>
+          <wire name="IntellitecThermostatControl:tc|it.tm4" tap_mode="classic" type="combinatorial"/>
+          <wire name="IntellitecThermostatControl:tc|item[0]" tap_mode="classic" type="register"/>
+          <wire name="IntellitecThermostatControl:tc|item[1]" tap_mode="classic" type="register"/>
+          <wire name="IntellitecThermostatControl:tc|item[2]" tap_mode="classic" type="register"/>
+          <wire name="IntellitecThermostatControl:tc|item[3]" tap_mode="classic" type="register"/>
+          <wire name="IntellitecThermostatControl:tc|state.Data" tap_mode="classic" type="combinatorial"/>
+          <wire name="IntellitecThermostatControl:tc|state.Syncing" tap_mode="classic" type="combinatorial"/>
+          <wire name="IntellitecThermostatControl:tc|sync12" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|slaves[0].stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|slaves[1].stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|slaves[2].stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|slaves[3].stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|slaves[4].stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|slaves[5].stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|output_data[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|output_data[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|output_data[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.ack" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[10]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[11]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[12]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[13]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[14]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[15]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[16]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[17]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[18]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[19]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[20]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[21]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[22]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[23]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[24]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[25]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[26]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[27]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[28]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[29]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[30]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[31]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[6]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[7]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[8]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.adr[9]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.cyc" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[10]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[11]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[12]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[13]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[14]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[15]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[16]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[17]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[18]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[19]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[20]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[21]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[22]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[23]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[24]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[25]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[26]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[27]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[28]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[29]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[30]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[31]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[6]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[7]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[8]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[9]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[10]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[11]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[12]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[13]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[14]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[15]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[16]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[17]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[18]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[19]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[20]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[21]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[22]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[23]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[24]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[25]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[26]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[27]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[28]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[29]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[30]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[31]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[4]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[5]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[6]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[7]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[8]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[9]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.err" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.rty" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.sel[0]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.sel[1]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.sel[2]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.sel[3]" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.stb" tap_mode="classic" type="combinatorial"/>
+          <wire name="ThermoProcessor:proc|wb_trafficcop.we" tap_mode="classic" type="combinatorial"/>
         </storage_qualifier_input_vec>
       </signal_vec>
       <presentation>
         <data_view>
-          <net is_signal_inverted="no" name="ThermoProcessor:proc|rst"/>
-          <net is_signal_inverted="no" name="cfi_arbitrator:cfi_arb|request"/>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.ack"/>
+          <bus is_signal_inverted="no" link="all" name="ThermoProcessor:proc|wb_trafficcop.adr" order="msb_to_lsb" radix="hex" state="collapse" type="combinatorial">
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[31]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[30]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[29]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[28]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[27]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[26]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[25]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[24]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[23]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[22]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[21]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[20]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[19]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[18]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[17]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[16]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[15]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[14]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[13]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[12]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[11]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[10]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[9]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[8]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[7]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[6]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[5]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[4]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[3]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[2]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[1]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[0]"/>
+          </bus>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.cyc"/>
+          <bus is_signal_inverted="no" link="all" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s" order="msb_to_lsb" radix="hex" state="collapse" type="combinatorial">
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[31]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[30]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[29]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[28]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[27]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[26]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[25]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[24]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[23]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[22]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[21]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[20]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[19]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[18]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[17]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[16]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[15]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[14]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[13]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[12]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[11]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[10]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[9]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[8]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[7]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[6]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[5]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[4]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[3]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[2]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[1]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[0]"/>
+          </bus>
+          <bus is_signal_inverted="no" link="all" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m" order="msb_to_lsb" radix="hex" state="collapse" type="combinatorial">
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[31]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[30]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[29]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[28]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[27]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[26]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[25]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[24]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[23]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[22]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[21]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[20]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[19]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[18]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[17]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[16]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[15]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[14]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[13]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[12]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[11]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[10]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[9]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[8]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[7]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[6]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[5]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[4]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[3]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[2]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[1]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[0]"/>
+          </bus>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.err"/>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.rty"/>
+          <bus is_signal_inverted="no" link="all" name="ThermoProcessor:proc|wb_trafficcop.sel" order="msb_to_lsb" radix="hex" state="collapse" type="combinatorial">
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.sel[3]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.sel[2]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.sel[1]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.sel[0]"/>
+          </bus>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.stb"/>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.we"/>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|slaves[0].stb"/>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|slaves[1].stb"/>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|slaves[2].stb"/>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|slaves[3].stb"/>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|slaves[4].stb"/>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|slaves[5].stb"/>
+          <bus is_signal_inverted="no" link="all" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|output_data" order="msb_to_lsb" radix="hex" state="collapse" type="combinatorial">
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|output_data[2]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|output_data[1]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|output_data[0]"/>
+          </bus>
+          <bus is_signal_inverted="no" link="all" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data" order="msb_to_lsb" radix="hex" state="collapse" type="combinatorial">
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[5]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[4]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[3]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[2]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[1]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[0]"/>
+          </bus>
         </data_view>
         <setup_view>
           <net is_signal_inverted="no" name="ThermoProcessor:proc|rst"/>
-          <net is_signal_inverted="no" name="cfi_arbitrator:cfi_arb|request"/>
+          <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|it.mt2"/>
+          <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|it.mt12"/>
+          <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|it.tm2"/>
+          <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|it.tm4"/>
+          <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|sync12"/>
+          <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|state.Syncing"/>
+          <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|state.Data"/>
+          <bus is_signal_inverted="no" link="all" name="IntellitecThermostatControl:tc|item" order="msb_to_lsb" radix="hex" state="collapse" type="register">
+            <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|item[3]"/>
+            <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|item[2]"/>
+            <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|item[1]"/>
+            <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|item[0]"/>
+          </bus>
+          <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|f1H"/>
+          <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|f1O"/>
+          <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|f2H"/>
+          <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|f2O"/>
+          <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|ht1"/>
+          <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|ht2"/>
+          <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|ac1"/>
+          <net is_signal_inverted="no" name="IntellitecThermostatControl:tc|ac2"/>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.ack"/>
+          <bus is_signal_inverted="no" link="all" name="ThermoProcessor:proc|wb_trafficcop.adr" order="msb_to_lsb" radix="hex" state="collapse" type="combinatorial">
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[31]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[30]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[29]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[28]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[27]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[26]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[25]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[24]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[23]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[22]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[21]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[20]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[19]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[18]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[17]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[16]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[15]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[14]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[13]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[12]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[11]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[10]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[9]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[8]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[7]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[6]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[5]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[4]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[3]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[2]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[1]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.adr[0]"/>
+          </bus>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.cyc"/>
+          <bus is_signal_inverted="no" link="all" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s" order="msb_to_lsb" radix="hex" state="collapse" type="combinatorial">
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[31]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[30]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[29]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[28]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[27]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[26]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[25]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[24]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[23]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[22]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[21]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[20]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[19]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[18]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[17]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[16]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[15]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[14]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[13]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[12]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[11]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[10]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[9]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[8]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[7]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[6]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[5]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[4]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[3]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[2]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[1]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_m2s[0]"/>
+          </bus>
+          <bus is_signal_inverted="no" link="all" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m" order="msb_to_lsb" radix="hex" state="collapse" type="combinatorial">
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[31]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[30]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[29]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[28]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[27]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[26]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[25]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[24]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[23]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[22]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[21]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[20]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[19]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[18]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[17]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[16]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[15]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[14]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[13]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[12]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[11]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[10]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[9]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[8]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[7]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[6]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[5]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[4]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[3]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[2]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[1]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.dat_s2m[0]"/>
+          </bus>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.err"/>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.rty"/>
+          <bus is_signal_inverted="no" link="all" name="ThermoProcessor:proc|wb_trafficcop.sel" order="msb_to_lsb" radix="hex" state="collapse" type="combinatorial">
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.sel[3]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.sel[2]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.sel[1]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.sel[0]"/>
+          </bus>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.stb"/>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_trafficcop.we"/>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|slaves[0].stb"/>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|slaves[1].stb"/>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|slaves[2].stb"/>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|slaves[3].stb"/>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|slaves[4].stb"/>
+          <net is_signal_inverted="no" name="ThermoProcessor:proc|slaves[5].stb"/>
+          <bus is_signal_inverted="no" link="all" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data" order="msb_to_lsb" radix="hex" state="collapse" type="combinatorial">
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[5]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[4]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[3]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[2]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[1]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|input_data[0]"/>
+          </bus>
+          <bus is_signal_inverted="no" link="all" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|output_data" order="msb_to_lsb" radix="hex" state="collapse" type="combinatorial">
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|output_data[2]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|output_data[1]"/>
+            <net is_signal_inverted="no" name="ThermoProcessor:proc|wb_expander_b3:expander|priority_encoder:enc|output_data[0]"/>
+          </bus>
         </setup_view>
       </presentation>
-      <trigger CRC="C9B6B4D3" attribute_mem_mode="false" gap_record="true" global_temp="1" name="trigger: 2011/05/04 00:14:43  #1" position="center" power_up_trigger_mode="false" record_data_gap="true" segment_size="8192" storage_mode="off" storage_qualifier_disabled="yes" storage_qualifier_port_is_pin="false" storage_qualifier_port_name="auto_stp_external_storage_qualifier" storage_qualifier_port_tap_mode="classic" trigger_in="dont_care" trigger_out="active high" trigger_type="circular">
+      <trigger attribute_mem_mode="false" gap_record="true" global_temp="1" name="trigger: 2011/05/20 01:27:05  #1" position="center" power_up_trigger_mode="false" record_data_gap="true" segment_size="2048" storage_mode="off" storage_qualifier_disabled="yes" storage_qualifier_port_is_pin="false" storage_qualifier_port_name="auto_stp_external_storage_qualifier" storage_qualifier_port_tap_mode="classic" trigger_in="dont_care" trigger_out="active high" trigger_type="circular">
         <power_up_trigger position="pre" storage_qualifier_disabled="no" trigger_in="dont_care" trigger_out="active high"/>
         <events use_custom_flow_control="no">
-          <level enabled="yes" name="condition1" type="basic">
+          <level enabled="yes" name="condition1" type="basic">'ThermoProcessor:proc|wb_trafficcop.adr[16]' == high &amp;&amp; 'ThermoProcessor:proc|wb_trafficcop.adr[17]' == high &amp;&amp; 'ThermoProcessor:proc|wb_trafficcop.adr[18]' == high &amp;&amp; 'ThermoProcessor:proc|wb_trafficcop.adr[19]' == high &amp;&amp; 'ThermoProcessor:proc|wb_trafficcop.adr[20]' == high &amp;&amp; 'ThermoProcessor:proc|wb_trafficcop.adr[21]' == high &amp;&amp; 'ThermoProcessor:proc|wb_trafficcop.adr[22]' == high &amp;&amp; 'ThermoProcessor:proc|wb_trafficcop.adr[23]' == high &amp;&amp; 'ThermoProcessor:proc|wb_trafficcop.adr[24]' == high &amp;&amp; 'ThermoProcessor:proc|wb_trafficcop.adr[25]' == high &amp;&amp; 'ThermoProcessor:proc|wb_trafficcop.adr[26]' == high &amp;&amp; 'ThermoProcessor:proc|wb_trafficcop.adr[27]' == high &amp;&amp; 'ThermoProcessor:proc|wb_trafficcop.adr[28]' == high &amp;&amp; 'ThermoProcessor:proc|wb_trafficcop.adr[29]' == high &amp;&amp; 'ThermoProcessor:proc|wb_trafficcop.adr[30]' == high &amp;&amp; 'ThermoProcessor:proc|wb_trafficcop.adr[31]' == high
             <power_up enabled="yes">
             </power_up>
             <op_node/>
           </level>
           <custom_flow_control>
-            <runtime_configurable comparison_operator="yes" counter_action="no" flag_action="no" logical_operator="yes" numerical_value="yes" state_transition="yes"/>
-            <flow_resources>
-              <counter initial_value="0" name="c1" width="8"/>
-            </flow_resources>
             <flow_expression><![CDATA[state ST1:
 if(!condition1)
 	reset c1;
@@ -75,14 +733,18 @@ else if(c1==30)
 else if (condition1)
 	increment c1;]]>
             </flow_expression>
+            <runtime_configurable comparison_operator="yes" counter_action="no" flag_action="no" logical_operator="yes" numerical_value="yes" state_transition="yes"/>
             <power_up_flow_expression><![CDATA[state ST1:
 trigger;]]>
             </power_up_flow_expression>
+            <flow_resources>
+              <counter initial_value="0" name="c1" width="8"/>
+            </flow_resources>
           </custom_flow_control>
         </events>
         <storage_qualifier_events>
-          <transitional>0
-            <pwr_up_transitional>0</pwr_up_transitional>
+          <transitional>00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+            <pwr_up_transitional>00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</pwr_up_transitional>
           </transitional>
           <storage_qualifier_level type="basic">
             <power_up>
@@ -100,10 +762,6 @@ trigger;]]>
             <op_node/>
           </storage_qualifier_level>
         </storage_qualifier_events>
-        <log>
-          <data global_temp="1" name="log: 2011/05/04 00:21:34  #0" power_up_mode="false" sample_depth="8192" trigger_position="4096">1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111</data>
-          <extradata>1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111T111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111</extradata>
-        </log>
       </trigger>
     </signal_set>
   </instance>
