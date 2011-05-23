@@ -262,6 +262,7 @@ module wb_expander_b3
    wishbone_b3.master  slave  [slaves],
    input wb_addr_range addrs  [slaves]
 );
+`include "oitConstant.sv"
 
    function logic between;
       input integer x;
@@ -273,83 +274,48 @@ module wb_expander_b3
 
 logic [32+3-1:0] master_out;
 logic [32+3-1:0] s2m [slaves];
-assign s2m[0] = {slave[0].dat_s2m, slave[0].ack, slave[0].err, slave[0].rty};
-assign s2m[1] = {slave[1].dat_s2m, slave[1].ack, slave[1].err, slave[1].rty};
-assign s2m[2] = {slave[2].dat_s2m, slave[2].ack, slave[2].err, slave[2].rty};
-assign s2m[3] = {slave[3].dat_s2m, slave[3].ack, slave[3].err, slave[3].rty};
-assign s2m[4] = {slave[4].dat_s2m, slave[4].ack, slave[4].err, slave[4].rty};
+generate
+   genvar i;
+   for(i = 0; i < slaves; i = i + 1)
+   begin  : s2mloop
+      assign s2m[i] = {slave[i].dat_s2m, slave[i].ack, slave[i].err, slave[i].rty};
+   end
+endgenerate
+
 assign {master.dat_s2m, master.ack, master.err, master.rty} = master_out;
 
-   always_comb
-   begin
-      slave[0].adr = master.adr;
-      slave[1].adr = master.adr;
-      slave[2].adr = master.adr;
-      slave[3].adr = master.adr;
-      slave[4].adr = master.adr;
-
-      slave[0].cyc = master.cyc;
-      slave[1].cyc = master.cyc;
-      slave[2].cyc = master.cyc;
-      slave[3].cyc = master.cyc;
-      slave[4].cyc = master.cyc;
-
-      slave[0].cyc = master.cyc;
-      slave[1].cyc = master.cyc;
-      slave[2].cyc = master.cyc;
-      slave[3].cyc = master.cyc;
-      slave[4].cyc = master.cyc;
-
-      slave[0].dat_m2s = master.dat_m2s;
-      slave[1].dat_m2s = master.dat_m2s;
-      slave[2].dat_m2s = master.dat_m2s;
-      slave[3].dat_m2s = master.dat_m2s;
-      slave[4].dat_m2s = master.dat_m2s;
-
-      slave[0].sel = master.sel;
-      slave[1].sel = master.sel;
-      slave[2].sel = master.sel;
-      slave[3].sel = master.sel;
-      slave[4].sel = master.sel;
-
-      slave[0].we  = master.we;
-      slave[1].we  = master.we;
-      slave[2].we  = master.we;
-      slave[3].we  = master.we;
-      slave[4].we  = master.we;
-
-      slave[0].stb = between( master.adr, addrs[0] )?master.stb:1'b0;
-      slave[1].stb = between( master.adr, addrs[1] )?master.stb:1'b0;
-      slave[2].stb = between( master.adr, addrs[2] )?master.stb:1'b0;
-      slave[3].stb = between( master.adr, addrs[3] )?master.stb:1'b0;
-      slave[4].stb = between( master.adr, addrs[4] )?master.stb:1'b0;
-
-      slave[0].cti = master.cti;
-      slave[1].cti = master.cti;
-      slave[2].cti = master.cti;
-      slave[3].cti = master.cti;
-      slave[4].cti = master.cti;
-
-      slave[0].bte = master.bte;
-      slave[1].bte = master.bte;
-      slave[2].bte = master.bte;
-      slave[3].bte = master.bte;
-      slave[4].bte = master.bte;
-
-      if( between( master.adr, addrs[0] ) )
-         master_out = s2m[0];
-      else if( between( master.adr, addrs[1] ) )
-         master_out = s2m[1];
-      else if( between( master.adr, addrs[2] ) )
-         master_out = s2m[2];
-      else if( between( master.adr, addrs[3] ) )
-         master_out = s2m[3];
-      else if( between( master.adr, addrs[4] ) )
-         master_out = s2m[4];
-      else
-         master_out = 'd2; //Error
-
+generate
+   for(i = 0; i < slaves; i = i + 1)
+   begin  : m2sloop
+      assign slave[i].adr = master.adr;
+      assign slave[i].cyc = master.cyc;
+      assign slave[i].dat_m2s = master.dat_m2s;
+      assign slave[i].sel = master.sel;
+      assign slave[i].we  = master.we;
+      assign slave[i].stb = between( master.adr, addrs[i] )?master.stb:1'b0;
+      assign slave[i].cti = master.cti;
+      assign slave[i].bte = master.bte;
    end
+endgenerate
+
+logic [slaves-1:0] whichslave;
+generate
+   for(i = 0; i < slaves; i = i + 1)
+   begin  : selloop
+      assign whichslave[i] = between( master.adr, addrs[i] );
+   end
+endgenerate
+
+logic [oitBits(slaves)-1:0] whichslavenum;
+priority_encoder #($bits(whichslave),$bits(whichslavenum)) enc ( whichslave, whichslavenum );
+
+always_comb
+begin
+   if( whichslave == 0 )
+      master_out = 'd2; //Error
+   else
+      master_out = s2m[whichslavenum];
+end
 
 endmodule
 
