@@ -29,15 +29,22 @@ SECTIONS
 	{
 		*(.rodata .rodata.*)
 	} > flash
+	__DATA_INIT = .;
 	
-	/* This does not actually get initilized */
 	.data :
 	{
+		__RAM_SDATA = .;
 		KEEP(*(.data))
+		__RAM_EDATA = .;
 	} > ram AT> flash
 	
-    .bss :      { *(.bss)   }       > ram
-     
+    .bss ALIGN(0x4):
+	{
+		__RAM_SBSS = .;
+		*(.bss)
+		__RAM_EBSS = .;
+	} > ram
+	
     .stack ALIGN(0x4): /*Word Align*/
     {
         __STACK_TOP    = . ;

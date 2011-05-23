@@ -105,6 +105,38 @@ _reset:
    l.ori r0,r0,0x0000	; 
    l.movhi r1,hi(sp)	; #r1 = sp
    l.ori r1,r1,lo(sp)	;
+
+   //Init .data
+   load32i r2, (__RAM_SDATA)
+   load32i r3, (__RAM_EDATA)
+   load32i r4, (__DATA_INIT)
+_reset.loaddata:
+   l.sfltu r2,r3
+   l.bnf _reset.donedata
+   l.nop
+ 
+   l.lwz r5,0(r4)
+   l.sw 0(r2),r5
+   l.addi r2,r2,4
+   l.addi r4,r4,4
+   l.j _reset.loaddata
+   l.nop
+_reset.donedata:
+   
+   //Zero .bss
+   load32i r2, (__RAM_SBSS)
+   load32i r3, (__RAM_EBSS)
+_reset.loadbss:
+   l.sfltu r2,r3
+   l.bnf _reset.donebss
+   l.nop
+ 
+   l.sw 0(r2),r0
+   l.addi r2,r2,4
+   l.j _reset.loadbss
+   l.nop
+_reset.donebss:
+   
    l.or r2,r0,r0		; #clear r2
    l.or r3,r0,r0		; #clear r3
    l.or r4,r0,r0		; #clear r4
