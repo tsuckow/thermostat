@@ -1,8 +1,8 @@
 interface IntellitecSignal;
   logic tm4, tm2;
   logic mt12, mt2;
-  modport Master(output mt12, output mt2, input tm4, input tm2);
-  modport Slave(input mt12, input mt2, output tm4, output tm2);
+  modport master(output mt12, output mt2, input tm4, input tm2);
+  modport slave(input mt12, input mt2, output tm4, output tm2);
 endinterface
 /*
 module IntellitecClock
@@ -19,7 +19,7 @@ module IntellitecMasterControl
 (
 	input clock,
 	input [1:0] shed,
-	IntellitecSignal.Master it,
+	IntellitecSignal.master it,
 	output ac1,
 	output ac2,
 	output f1O,
@@ -99,14 +99,14 @@ always_comb
 				end
 		endcase
 			
-		ac1 = values2[1];
-		ac2 = values2[5];
-		f1O = values4[0];
-		f1H = values2[0];
-		f2O = values4[4];
-		f2H = values2[4];
-		ht1 = values2[3];
-		ht2 = values2[7];
+		ac1 = ~(values2[1] & !shed[0]);
+		ac2 = ~(values2[5] & !shed[1]);
+		f1O = ~(values4[0] & !shed[0]);
+		f1H = ~(values2[0] & !shed[0]);
+		f2O = ~(values4[4] & !shed[1]);
+		f2H = ~(values2[4] & !shed[1]);
+		ht1 = ~(values2[3] & !shed[0]);
+		ht2 = ~(values2[7] & !shed[1]);
 	end
 	
 endmodule
@@ -125,10 +125,9 @@ module IntellitecThermostatControl
 	input f2H,
 	input ht1,
 	input ht2,
-	IntellitecSignal.Slave it,
+	IntellitecSignal.slave it,
 	output reg sync12,
-	output reg [1:0] shed,
-	output reg [3:0] debug
+	output reg [1:0] shed
 );
 
 wire [0:9] data4;
@@ -164,7 +163,7 @@ always_ff@(posedge clock)
 		case(state)
 			Syncing:
 				begin
-					state = (~it.mt12 && item>=1)?Data:Syncing;
+					state = (~it.mt12 && item>1)?Data:Syncing;
 					item = (it.mt12)?(item + 1'd1):4'd0;
 				end
 			Data:
@@ -202,8 +201,5 @@ always_comb
 	//When sync12 is high, output disabled
 	assign it.tm4 = tm4 & ~sync12;
 	assign it.tm2 = tm2 & ~sync12;
-	
-	//Investigate why the above stops output but then we keep outputing for another clock pulse
-	assign debug = { 1'd0, state == Syncing, shed };
-	
+
 endmodule

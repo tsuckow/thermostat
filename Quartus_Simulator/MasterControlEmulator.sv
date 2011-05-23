@@ -1,6 +1,6 @@
 module MasterControlEmulator
 (
-   input clk,
+//   input clk,
    input [1:0] button,
    IntellitecSignal.Master it,
    output ac1,
@@ -13,10 +13,23 @@ module MasterControlEmulator
    output ht2
 );
 
+logic clock_loop, clock_ff, clk;
+assign clock_loop = ~clock_loop;//FIXME
+
+always_ff@( posedge clock_loop )
+begin
+   if( clock_loop )
+   begin
+      clock_ff = ~clock_ff;
+   end
+end
+
+oitClockDivider #( 73_551_044, 33_000 ) div (.in(clock_ff), .out(clk));
+
 IntellitecMasterControl controller
 (
    .clock( clk ),
-   .shed( button ),
+   .shed( ~button ),
    .it,
    .ac1,
    .ac2,

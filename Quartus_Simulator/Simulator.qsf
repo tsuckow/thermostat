@@ -44,8 +44,22 @@ set_global_assignment -name PROJECT_CREATION_TIME_DATE "12:25:01  MAY 06, 2011"
 set_global_assignment -name LAST_QUARTUS_VERSION "10.1 SP1"
 set_global_assignment -name USE_CONFIGURATION_DEVICE ON
 set_global_assignment -name RESERVE_ALL_UNUSED_PINS_NO_OUTPUT_GND "AS INPUT TRI-STATED"
+set_global_assignment -name MAX7000_DEVICE_IO_STANDARD TTL
+set_global_assignment -name MISC_FILE "C:/Users/Deathbob/Documents/My Dropbox/School/10-11 Q2/Sp/project/Quartus_Simulator/Simulator.dpf"
+set_location_assignment PIN_33 -to it.mt2
+set_location_assignment PIN_28 -to it.mt12
+set_location_assignment PIN_11 -to it.tm2
+set_location_assignment PIN_9 -to it.tm4
+set_location_assignment PIN_19 -to ac1
+set_location_assignment PIN_18 -to ac2
+set_location_assignment PIN_25 -to f1H
+set_location_assignment PIN_27 -to f1O
+set_location_assignment PIN_24 -to f2H
+set_location_assignment PIN_26 -to f2O
+set_location_assignment PIN_21 -to ht1
+set_location_assignment PIN_20 -to ht2
+set_location_assignment PIN_29 -to button[1]
+set_location_assignment PIN_31 -to button[0]
+set_global_assignment -name SYSTEMVERILOG_FILE ../src/oitlib/oitlib_modules.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ../src/Master.sv
 set_global_assignment -name SYSTEMVERILOG_FILE MasterControlEmulator.sv
-set_global_assignment -name MAX7000_DEVICE_IO_STANDARD TTL
-set_location_assignment PIN_43 -to clk
-set_global_assignment -name MISC_FILE "C:/Users/Deathbob/Documents/My Dropbox/School/10-11 Q2/Sp/project/Quartus_Simulator/Simulator.dpf"
