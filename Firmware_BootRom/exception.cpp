@@ -4,6 +4,7 @@
 #include "sprs.h"
 
 #include "touchscreen.h"
+#include <stdio.h>
 
 //Forward
 extern "C"
@@ -22,6 +23,13 @@ extern "C"
    void exception_trap();
    void exception_unknown();
    long exception_system_call(long arg1, long arg2, long arg3, long arg4, long arg5, long arg6);
+}
+
+inline uint32_t getExceptionEA()
+{
+	register uint32_t tmp;
+	asm("l.mfspr %0,r0,%1":"=r"(tmp):"n"(SPR_EEAR_BASE):);
+	return tmp;
 }
 
 void external_exception()
@@ -44,6 +52,12 @@ void printExceptionError(char const * str)
 {
 	size_t len = strlen(str);
 	printString(800/2 - len*8/2,480/2+4, reinterpret_cast<unsigned char const *>(str) );
+	
+	char buf[30];
+	snprintf( buf, 30, "0x%X", getExceptionEA() );
+	
+	len = strlen(buf);
+	printString(800/2 - len*8/2,480/2-4, reinterpret_cast<unsigned char const *>(buf) );
 	
 	while(true);
 }

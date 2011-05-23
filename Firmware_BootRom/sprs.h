@@ -63,3 +63,11 @@ inline void spr_ic_enable()
    SR |= SPR_SR_ICE;
    setSPR( SPR_SR, SR );
 }
+
+inline int spr_is_little_endian()
+{
+	unsigned long SR;
+	getSPR( SPR_SR, SR );
+    SR |= SPR_SR_LEE;
+	return SR == SPR_SR_LEE;
+}

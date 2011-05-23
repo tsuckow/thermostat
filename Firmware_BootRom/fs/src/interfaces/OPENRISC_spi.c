@@ -91,46 +91,22 @@ void if_startXFER(void)
 
 esint8 if_initInterface(hwInterface* file, eint8* opts)
 {
-	euint32 sc;
-	
 	if_spiInit(file); /* init at low speed */
-	
-	if(sd_Init(file)<0)	{
-		DBG((TXT("Card failed to init, breaking up...\n")));
-		return(-1);
-	}
-	if(sd_State(file)<0){
-		DBG((TXT("Card didn't return the ready state, breaking up...\n")));
-		return(-2);
-	}
-	
-	// file->sectorCount=4; /* FIXME ASAP!! */
-	
-	sd_getDriveSize(file, &sc);
-	file->sectorCount = sc/512;
-	if( (sc%512) != 0) {
-		file->sectorCount--;
-	}
-	DBG((TXT("Drive Size is %lu Bytes (%lu Sectors)\n"), sc, file->sectorCount));
-	
-	 /* increase speed after init */
-	if_spiSetSpeed(100);
-	// if_spiSetSpeed(100); /* debug - slower */
-	
-	DBG((TXT("Init done...\n")));
-	return(0);
+	return sd_Init(file);
 }
 /*****************************************************************************/ 
 
 esint8 if_readBuf(hwInterface* file,euint32 address,euint8* buf)
 {
-	return(sd_readSector(file,address,buf,512));
+	//DBG((TXT("if_readBuf::Trying to read sector %u and store it at %p.\n"),address,buf));
+	return(sd_read(buf,address));
 }
 /*****************************************************************************/
 
 esint8 if_writeBuf(hwInterface* file,euint32 address,euint8* buf)
 {
-	return(sd_writeSector(file,address, buf));
+	//DBG((TXT("Trying to write %u to sector %u.\n"),buf,address));
+	return(sd_write(buf,address));
 }
 /*****************************************************************************/ 
 
@@ -142,24 +118,11 @@ esint8 if_setPos(hwInterface* file,euint32 address)
 
 void if_spiInit(hwInterface *iface)
 {
-	euint8 i; 
-
 	if_ss_off();
 	if_ss_manual();
 	
 	SPI[SPI_CTRL] |= 8; //8 bit transfers
 	SPI[SPI_CTRL] |= SPI_CTRL_TXNEG; //Transmit changes on negedge / Latch Pos edge
-	
-	// low speed during init
-	if_spiSetSpeed(254); 
-
-	/* Send 20 spi commands with card not selected */
-	for(i=0;i<21;i++)
-		if_spiSend(iface,0xff);
-
-	// enable automatic slave CS for SSP
-	if_ss_auto();
-	if_ss_on();
 }
 /*****************************************************************************/
 
@@ -171,17 +134,15 @@ void if_spiSetSpeed(euint8 speed)
 
 /*****************************************************************************/
 
-euint8 if_spiSend(hwInterface *iface, euint8 outgoing)
+euint8 if_spiSend(euint8 outgoing)
 {
 	euint8 incoming;
 
-	// SELECT_CARD();  // done by hardware
 	while( if_isBusy() );
 	SPI[SPI_Tx0] = outgoing;
 	if_startXFER();
 	while( if_isBusy() );
 	incoming = SPI[SPI_Rx0];
-	// UNSELECT_CARD();  // done by hardware
 
 	return(incoming);
 }

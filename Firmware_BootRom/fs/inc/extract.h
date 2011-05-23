@@ -41,12 +41,12 @@
 
 #ifdef BIG_ENDIAN
 
-#define ltb_end16(x)  ((((uint16)(x) & 0xff00) >> 8) | \
-                      (((uint16)(x) & 0x00ff) << 8))
-#define ltb_end32(x)  ((((uint32)(x) & 0xff000000) >> 24) | \
-                       (((uint32)(x) & 0x00ff0000) >> 8)  | \
-                       (((uint32)(x) & 0x0000ff00) << 8)  | \
-                       (((uint32)(x) & 0x000000ff) << 24))
+#define ltb_end16(x)  ((((euint16)(x) & 0xff00) >> 8) | \
+                      (((euint16)(x) & 0x00ff) << 8))
+#define ltb_end32(x)  ((((euint32)(x) & 0xff000000) >> 24) | \
+                       (((euint32)(x) & 0x00ff0000) >> 8)  | \
+                       (((euint32)(x) & 0x0000ff00) << 8)  | \
+                       (((euint32)(x) & 0x000000ff) << 24))
 
 #else
 

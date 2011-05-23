@@ -51,19 +51,8 @@
 	#include "interfaces/OPENRISC_spi.h"
 #endif
 
-#define	CMDREAD		17
-#define	CMDWRITE	24
-#define	CMDREADCSD       9
-
 esint8  sd_Init(hwInterface *iface);
-void sd_Command(hwInterface *iface,euint8 cmd, euint16 paramx, euint16 paramy);
-euint8 sd_Resp8b(hwInterface *iface);
-void sd_Resp8bError(hwInterface *iface,euint8 value);
-euint16 sd_Resp16b(hwInterface *iface);
-esint8 sd_State(hwInterface *iface);
-
-esint8 sd_readSector(hwInterface *iface,euint32 address,euint8* buf, euint16 len);
-esint8 sd_writeSector(hwInterface *iface,euint32 address, euint8* buf);
-esint8 sd_getDriveSize(hwInterface *iface, euint32* drive_size );
+int sd_write(const char *buffer, int block_number);
+int sd_read(char *buffer, int block_number);
 
 #endif

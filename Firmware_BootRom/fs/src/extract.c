@@ -88,16 +88,16 @@ void ex_setPartitionField(euint8* buf,PartitionField* pf, euint32 offset)
 
 euint16 ex_getb16(euint8* buf,euint32 offset)
 {
-	return(ltb_end16(((*(buf+offset+1))<<8) + ((*(buf+offset+0))<<0)));
+	return(((*(buf+offset+1))<<8) + ((*(buf+offset+0))<<0));
 }
 /*****************************************************************************/
 
 euint32 ex_getb32(euint8* buf,euint32 offset)
 {
-	return(ltb_end32(((euint32)buf[offset+3]<<24)+
+	return(((euint32)buf[offset+3]<<24)+
 	      ((euint32)buf[offset+2]<<16)+
 	      ((euint32)buf[offset+1]<<8)+
-	      ((euint32)buf[offset+0]<<0)));
+	      ((euint32)buf[offset+0]<<0));
 }
 /*****************************************************************************/
 
@@ -141,6 +141,7 @@ void ex_getPartitionField(euint8* buf,PartitionField* pf, euint32 offset)
 	pf->CHS_end[2]     = *(buf + offset + 7);
 	pf->LBA_begin      = ex_getb32(buf + offset,8);
 	pf->numSectors     = ex_getb32(buf + offset,12);
+	DBG((TXT("Sectors: %08x\n"),pf->numSectors));
 }
 /*****************************************************************************/
 

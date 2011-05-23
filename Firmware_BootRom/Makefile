@@ -26,6 +26,7 @@ LIBPATH = -L=/usr/lib
 #LIBPATH  = -L $(TOOLCHAIN)/or32-linux/lib
 #LIBPATH += -L $(TOOLCHAIN)/or32-linux/sys-root/usr/lib/
 LIBPATH += -L $(TOOLCHAIN)/lib/gcc/or32-linux/4.5.1-or32-1.0rc4/
+LIBPATH += -L $(TOOLCHAIN)/lib/gcc/or32-linux/4.5.1-or32-1.0rc1/
 
 .PHONY: all
 all: realall
@@ -122,7 +123,6 @@ lib: $(OBJ)
 
 #Include Current Directory
 $(call incdir,.)
-$(call incdir,fs)
 
 %.o:%.S
 	$(CC) -MD -MP -MF $@.d $(CF_ALL) -o $@ $(<)

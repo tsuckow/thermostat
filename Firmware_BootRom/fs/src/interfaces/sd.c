@@ -36,309 +36,273 @@
 #include "interfaces/sd.h"
 /*****************************************************************************/
 
+#define SD_COMMAND_TIMEOUT 5000
+
+#define R1_IDLE_STATE           (1 << 0)
+#define R1_ERASE_RESET          (1 << 1)
+#define R1_ILLEGAL_COMMAND      (1 << 2)
+#define R1_COM_CRC_ERROR        (1 << 3)
+#define R1_ERASE_SEQUENCE_ERROR (1 << 4)
+#define R1_ADDRESS_ERROR        (1 << 5)
+#define R1_PARAMETER_ERROR      (1 << 6)
+
+/*
+// Types
+//  - v1.x Standard Capacity
+//  - v2.x Standard Capacity
+//  - v2.x High Capacity
+//  - Not recognised as an SD Card
+*/
+
+#define SDCARD_FAIL 0
+#define SDCARD_V1   1
+#define SDCARD_V2   2
+#define SDCARD_V2HC 3
+
+int _cmd(int cmd, int arg);
+int _cmd8();
+int _cmd58();
+int _read(char *buffer, int length);
+int _write(const char *buffer, int length);
+
+int initialise_card_v1(void)
+{
+	int i;
+    for(i=0; i<SD_COMMAND_TIMEOUT; i++)
+	{
+        _cmd(55, 0); 
+        if(_cmd(41, 0) == 0) { 
+            return SDCARD_V1;
+        }
+    }
+
+    DBG((TXT("Timeout waiting for v1.x card\n")));
+    return SDCARD_FAIL;
+}
+
+int initialise_card_v2(void)
+{
+    int i;
+    for(i=0; i<SD_COMMAND_TIMEOUT; i++) {
+        _cmd(55, 0); 
+        if(_cmd(41, 0) == 0) { 
+            _cmd58();
+            return SDCARD_V2;
+        }
+    }
+
+    DBG((TXT("Timeout waiting for v2.x card\n")));
+    return SDCARD_FAIL;
+}
+
+int initialise_card(void)
+{
+	int i;
+	
+    // Set to slow clock for initialisation, and clock card with cs = 1
+    if_spiSetSpeed(254); 
+    if_ss_off();
+    for(i=0; i<20; i++) {   
+        if_spiSend(0xFF);
+    }
+
+    // send CMD0, should return with all zeros except IDLE STATE set (bit 0)
+    if(_cmd(0, 0) != R1_IDLE_STATE) { 
+        DBG((TXT("No disk, or could not put SD card in to SPI idle state\n")));
+        return SDCARD_FAIL;
+    }
+
+    // send CMD8 to determine whther it is ver 2.x
+    int r = _cmd8();
+    if(r == R1_IDLE_STATE) {
+        return initialise_card_v2();
+    } else if(r == (R1_IDLE_STATE | R1_ILLEGAL_COMMAND)) {
+        return initialise_card_v1();
+    } else {
+        DBG((TXT("Not in idle state after sending CMD8 (not an SD card?)\n")));
+        return SDCARD_FAIL;
+    }
+}
+
 esint8 sd_Init(hwInterface *iface)
 {
-	esint16 i;
-	euint8 resp;
-	
-	/* Try to send reset command up to 100 times */
-	i=100;
-	do{
-		sd_Command(iface,0, 0, 0);
-		resp=sd_Resp8b(iface);
-	}
-	while(resp!=1 && i--);
-	
-	if(resp!=1){
-		if(resp==0xff){
-			return(-1);
-		}
-		else{
-			sd_Resp8bError(iface,resp);
-			return(-2);
-		}
-	}
 
-	/* Wait till card is ready initialising (returns 0 on CMD1) */
-	/* Try up to 32000 times. */
-	i=32000;
-	do{
-		sd_Command(iface,1, 0, 0);
-		
-		resp=sd_Resp8b(iface);
-		if(resp!=0)
-			sd_Resp8bError(iface,resp);
-	}
-	while(resp==1 && i--);
-	
-	if(resp!=0){
-		sd_Resp8bError(iface,resp);
-		return(-3);
-	}
-	
-	return(0);
+    int i = initialise_card();
+
+    // Set block length to 512 (CMD16)
+    if(_cmd(16, 512) != 0) {
+        DBG((TXT("Set 512-byte block timed out\n")));
+        return 1;
+    }
+    
+    if_spiSetSpeed(50);
+	DBG((TXT("SD INIT DONE")));
+    return 0;
 }
-/*****************************************************************************/
 
-void sd_Command(hwInterface *iface,euint8 cmd, euint16 paramx, euint16 paramy)
-{
-	if_spiSend(iface,0xff);
+int sd_write(const char *buffer, int block_number) {
+    // set write address for single block (CMD24)
+    if(_cmd(24, block_number * 512) != 0) {
+        return 1;
+    }
 
-	if_spiSend(iface,0x40 | cmd);
-	if_spiSend(iface,(euint8) (paramx >> 8)); /* MSB of parameter x */
-	if_spiSend(iface,(euint8) (paramx)); /* LSB of parameter x */
-	if_spiSend(iface,(euint8) (paramy >> 8)); /* MSB of parameter y */
-	if_spiSend(iface,(euint8) (paramy)); /* LSB of parameter y */
-
-	if_spiSend(iface,0x95); /* Checksum (should be only valid for first command (0) */
-
-	if_spiSend(iface,0xff); /* eat empty command - response */
+    // send the data block
+    _write(buffer, 512);    
+    return 0;    
 }
-/*****************************************************************************/
 
-euint8 sd_Resp8b(hwInterface *iface)
-{
-	euint8 i;
-	euint8 resp;
-	
-	/* Respone will come after 1 - 8 pings */
-	for(i=0;i<8;i++){
-		resp = if_spiSend(iface,0xff);
-		if(resp != 0xff)
-			return(resp);
-	}
-		
-	return(resp);
+int sd_read(char *buffer, int block_number) {        
+    // set read address for single block (CMD17)
+    if(_cmd(17, block_number * 512) != 0) {
+        return 1;
+    }
+    
+    // receive the data
+    _read(buffer, 512);
+    return 0;
 }
-/*****************************************************************************/
 
-euint16 sd_Resp16b(hwInterface *iface)
+int _cmd(int cmd, int arg)
 {
-	euint16 resp;
-	
-	resp = ( sd_Resp8b(iface) << 8 ) & 0xff00;
-	resp |= if_spiSend(iface,0xff);
-	
-	return(resp);
+	int i;
+    if_ss_on();
+
+    // send a command
+    if_spiSend(0x40 | cmd);
+    if_spiSend(arg >> 24);
+    if_spiSend(arg >> 16);
+    if_spiSend(arg >> 8);
+    if_spiSend(arg >> 0);
+    if_spiSend(0x95);
+
+    // wait for the repsonse (response[7] == 0)
+    for(i=0; i<SD_COMMAND_TIMEOUT; i++) {
+        int response = if_spiSend(0xFF);
+        if(!(response & 0x80)) {
+            if_ss_off();
+            if_spiSend(0xFF);
+            return response;
+        }
+    }
+    if_ss_off();
+    if_spiSend(0xFF);
+    return -1; // timeout
 }
-/*****************************************************************************/
 
-void sd_Resp8bError(hwInterface *iface,euint8 value)
+int _cmd8()
 {
-	switch(value)
-	{
-		case 0x40:
-			DBG((TXT("Argument out of bounds.\n")));
-			break;
-		case 0x20:
-			DBG((TXT("Address out of bounds.\n")));
-			break;
-		case 0x10:
-			DBG((TXT("Error during erase sequence.\n")));
-			break;
-		case 0x08:
-			DBG((TXT("CRC failed.\n")));
-			break;
-		case 0x04:
-			DBG((TXT("Illegal command.\n")));
-			break;
-		case 0x02:
-			DBG((TXT("Erase reset (see SanDisk docs p5-13).\n")));
-			break;
-		case 0x01:
-			DBG((TXT("Card is initialising.\n")));
-			break;
-		default:
-			DBG((TXT("Unknown error 0x%x (see SanDisk docs p5-13).\n"),value));
-			break;
-	}
+	int i;
+    if_ss_on();
+    
+    // send a command
+    if_spiSend(0x40 | 8); // CMD8
+    if_spiSend(0x00);     // reserved
+    if_spiSend(0x00);     // reserved
+    if_spiSend(0x01);     // 3.3v
+    if_spiSend(0xAA);     // check pattern
+    if_spiSend(0x87);     // crc
+
+    // wait for the repsonse (response[7] == 0)
+    for(i=0; i<SD_COMMAND_TIMEOUT * 1000; i++) {
+        char response[5];
+        response[0] = if_spiSend(0xFF);
+        if(!(response[0] & 0x80))
+		{
+			int j;
+                for(j=1; j<5; j++) {
+                    response[i] = if_spiSend(0xFF);
+                }
+                if_ss_off();
+                if_spiSend(0xFF);
+                return response[0];
+        }
+    }
+    if_ss_off();
+    if_spiSend(0xFF);
+    return -1; // timeout
 }
-/*****************************************************************************/
 
-esint8 sd_State(hwInterface *iface)
+int _cmd58()
 {
-	eint16 value;
-	
-	sd_Command(iface,13, 0, 0);
-	value=sd_Resp16b(iface);
+    int i;
+    if_ss_on();
+    int arg = 0;
+    
+    // send a command
+    if_spiSend(0x40 | 58);
+    if_spiSend(arg >> 24);
+    if_spiSend(arg >> 16);
+    if_spiSend(arg >> 8);
+    if_spiSend(arg >> 0);
+    if_spiSend(0x95);
 
-	switch(value)
-	{
-		case 0x000:
-			return(1);
-			break;
-		case 0x0001:
-			DBG((TXT("Card is Locked.\n")));
-			break;
-		case 0x0002:
-			DBG((TXT("WP Erase Skip, Lock/Unlock Cmd Failed.\n")));
-			break;
-		case 0x0004:
-			DBG((TXT("General / Unknown error -- card broken?.\n")));
-			break;
-		case 0x0008:
-			DBG((TXT("Internal card controller error.\n")));
-			break;
-		case 0x0010:
-			DBG((TXT("Card internal ECC was applied, but failed to correct the data.\n")));
-			break;
-		case 0x0020:
-			DBG((TXT("Write protect violation.\n")));
-			break;
-		case 0x0040:
-			DBG((TXT("An invalid selection, sectors for erase.\n")));
-			break;
-		case 0x0080:
-			DBG((TXT("Out of Range, CSD_Overwrite.\n")));
-			break;
-		default:
-			if(value>0x00FF)
-				sd_Resp8bError(iface,(euint8) (value>>8));
-			else
-				DBG((TXT("Unknown error: 0x%x (see SanDisk docs p5-14).\n"),value));
-			break;
-	}
-	return(-1);
+    // wait for the repsonse (response[7] == 0)
+    for(i=0; i<SD_COMMAND_TIMEOUT; i++) {
+        int response = if_spiSend(0xFF);
+        if(!(response & 0x80)) {
+            int ocr = if_spiSend(0xFF) << 24;
+            ocr |= if_spiSend(0xFF) << 16;
+            ocr |= if_spiSend(0xFF) << 8;
+            ocr |= if_spiSend(0xFF) << 0;
+//            printf("OCR = 0x%08X\n", ocr);
+            if_ss_off();
+            if_spiSend(0xFF);
+            return response;
+        }
+    }
+    if_ss_off();
+    if_spiSend(0xFF);
+    return -1; // timeout
 }
-/*****************************************************************************/
 
-/* ****************************************************************************
- * WAIT ?? -- FIXME
- * CMDWRITE
- * WAIT
- * CARD RESP
- * WAIT
- * DATA BLOCK OUT
- *      START BLOCK
- *      DATA
- *      CHKS (2B)
- * BUSY...
- */
-
-esint8 sd_writeSector(hwInterface *iface,euint32 address, euint8* buf)
+int _read(char *buffer, int length)
 {
-	euint32 place;
-	euint16 i;
-	euint16 t=0;
-	
-	/*DBG((TXT("Trying to write %u to sector %u.\n"),(void *)&buf,address));*/
-	place=512*address;
-	sd_Command(iface,CMDWRITE, (euint16) (place >> 16), (euint16) place);
+	int i;
+    if_ss_on();
 
-	sd_Resp8b(iface); /* Card response */
+    // read until start byte (0xFF)
+    while(if_spiSend(0xFF) != 0xFE);
 
-	if_spiSend(iface,0xfe); /* Start block */
-	for(i=0;i<512;i++) 
-		if_spiSend(iface,buf[i]); /* Send data */
-	if_spiSend(iface,0xff); /* Checksum part 1 */
-	if_spiSend(iface,0xff); /* Checksum part 2 */
+    // read data
+    for(i=0; i<length; i++) {
+        buffer[i] = if_spiSend(0xFF);
+    }
+    if_spiSend(0xFF); // checksum
+    if_spiSend(0xFF);
 
-	if_spiSend(iface,0xff);
-
-	while(if_spiSend(iface,0xff)!=0xff){
-		t++;
-		/* Removed NOP */
-	}
-	/*DBG((TXT("Nopp'ed %u times.\n"),t));*/
-
-	return(0);
+    if_ss_off();
+    if_spiSend(0xFF);
+    return 0;
 }
-/*****************************************************************************/
 
-/* ****************************************************************************
- * WAIT ?? -- FIXME
- * CMDCMD
- * WAIT
- * CARD RESP
- * WAIT
- * DATA BLOCK IN
- * 		START BLOCK
- * 		DATA
- * 		CHKS (2B)
- */
-
-esint8 sd_readSector(hwInterface *iface,euint32 address, euint8* buf, euint16 len)
+int _write(const char *buffer, int length)
 {
-	euint8 cardresp;
-	euint8 firstblock;
-	euint8 c;
-	euint16 fb_timeout=0xffff;
-	euint32 i;
-	euint32 place;
+	int i;
+    if_ss_on();
+    
+    // indicate start of block
+    if_spiSend(0xFE);
+    
+    // write the data
+    for(i=0; i<length; i++) {
+        if_spiSend(buffer[i]);
+    }
+    
+    // write the checksum
+    if_spiSend(0xFF); 
+    if_spiSend(0xFF);
 
-	/*DBG((TXT("sd_readSector::Trying to read sector %u and store it at %p.\n"),address,&buf[0]));*/
-	place=512*address;
-	sd_Command(iface,CMDREAD, (euint16) (place >> 16), (euint16) place);
-	
-	cardresp=sd_Resp8b(iface); /* Card response */ 
+    // check the repsonse token
+    if((if_spiSend(0xFF) & 0x1F) != 0x05) {
+        if_ss_off();
+        if_spiSend(0xFF);        
+        return 1;
+    }
 
-	/* Wait for startblock */
-	do
-		firstblock=sd_Resp8b(iface); 
-	while(firstblock==0xff && fb_timeout--);
+    // wait for write to finish
+    while(if_spiSend(0xFF) == 0);
 
-	if(cardresp!=0x00 || firstblock!=0xfe){
-		sd_Resp8bError(iface,firstblock);
-		return(-1);
-	}
-	
-	for(i=0;i<512;i++){
-		c = if_spiSend(iface,0xff);
-		if(i<len)
-			buf[i] = c;
-	}
-
-	/* Checksum (2 byte) - ignore for now */
-	if_spiSend(iface,0xff);
-	if_spiSend(iface,0xff);
-
-	return(0);
-}
-/*****************************************************************************/
-
-/* ****************************************************************************
- calculates size of card from CSD 
- (extension by Martin Thomas, inspired by code from Holger Klabunde)
- */
-esint8 sd_getDriveSize(hwInterface *iface, euint32* drive_size )
-{
-	euint8 cardresp, i, by;
-	euint8 iob[16];
-	euint16 c_size, c_size_mult, read_bl_len;
-	
-	sd_Command(iface, CMDREADCSD, 0, 0);
-	
-	do {
-		cardresp = sd_Resp8b(iface);
-	} while ( cardresp != 0xFE );
-
-	DBG((TXT("CSD:")));
-	for( i=0; i<16; i++) {
-		iob[i] = sd_Resp8b(iface);
-		DBG((TXT(" %02x"), iob[i]));
-	}
-	DBG((TXT("\n")));
-
-	if_spiSend(iface,0xff);
-	if_spiSend(iface,0xff);
-	
-	c_size = iob[6] & 0x03; // bits 1..0
-	c_size <<= 10;
-	c_size += (euint16)iob[7]<<2;
-	c_size += iob[8]>>6;
-
-	by= iob[5] & 0x0F;
-	read_bl_len = 1;
-	read_bl_len <<= by;
-
-	by=iob[9] & 0x03;
-	by <<= 1;
-	by += iob[10] >> 7;
-	
-	c_size_mult = 1;
-	c_size_mult <<= (2+by);
-	
-	*drive_size = (euint32)(c_size+1) * (euint32)c_size_mult * (euint32)read_bl_len;
-	
-	return 0;
+    if_ss_off();
+    if_spiSend(0xFF);
+    return 0;
 }

@@ -1,15 +1,12 @@
-#ifndef TEST_H
-#define TEST_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-   int test(int);
+void efsl_debug(char const * format, ...);
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

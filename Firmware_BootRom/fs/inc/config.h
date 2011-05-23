@@ -73,7 +73,7 @@
  * So if you have a big endian system the library has to convert all figures to
  * big endian in order to work.
  */
-	#define LITTLE_ENDIAN
+  //#define BIG_ENDIAN
 	
 
 /* Date and Time support

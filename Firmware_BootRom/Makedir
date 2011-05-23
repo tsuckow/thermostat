@@ -1,26 +1,35 @@
 #$(call buildexe,boot.or32,main.o BootReset.o test.o touchscreen.o exception.o,,-Lfs -lefsl,fs/libefsl.a)
-$(call buildexe,boot.or32,main.o BootReset.o test.o touchscreen.o exception.o font.o fs/libefsl.a)
+$(call buildexe,boot.or32,main.o BootReset.o touchscreen.o exception.o font.o temperature.o snow-flake.o fs/libefsl.a dosfs/libfs.a libpng-out/lib/libpng.a)
+
+$(call incdir,fs)
+$(call incdir,dosfs)
+
+QUARTUS = /cygdrive/c/altera/11.0/quartus/bin
 
 boot.dat: boot.hex
 	perl hex2v.pl < boot.hex > boot.dat
 
 boot.pof: boot.hex boot.cof
-	/cygdrive/c/altera/10.1sp1/quartus/bin/quartus_cpf.exe -c boot.cof
+	$(QUARTUS)/quartus_cpf.exe -c boot.cof
 
 boot.hex: ./boot.or32
 	$(OBJCOPY) -O ihex ./boot.or32 boot.hex
 
+snow-flake.o: snow-flake.png
+	$(OBJCOPY) -I binary -O elf32-or32 -B or32 --rename-section .data=.rodata,alloc,load,readonly,data,contents snow-flake.png snow-flake.o
+
 font.o: font.pf
 	$(OBJCOPY) -I binary -O elf32-or32 -B or32 --rename-section .data=.rodata,alloc,load,readonly,data,contents font.pf font.o
 
+	
 .PHONY: program
 program: boot.pof
-	/cygdrive/c/altera/10.1sp1/quartus/bin/quartus_pgm -c 1 app.cdf
-	/cygdrive/c/altera/10.1sp1/quartus/bin/quartus_pgm -c 1 reboot.cdf
+	$(QUARTUS)/quartus_pgm -c 1 app.cdf
+	$(QUARTUS)/quartus_pgm -c 1 reboot.cdf
 
 .PHONY: reboot
 reboot:
-	/cygdrive/c/altera/10.1sp1/quartus/bin/quartus_pgm -c 1 reboot.cdf
+	$(QUARTUS)/quartus_pgm -c 1 reboot.cdf
 
 CLEAN := $(CLEAN) $d/boot.dat $d/boot.ihex $d/boot.pof
 
