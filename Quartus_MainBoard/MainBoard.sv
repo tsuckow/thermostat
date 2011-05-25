@@ -27,6 +27,9 @@ output [9:0] led_out,
 cfi.master   flash_out,
 IntellitecSignal.slave intellitec,
 spi.master   a2d_out,
+//i2c_external.master rtc_out,
+inout scl,
+inout sda,
 output [1:0] debug
 );
 
@@ -285,8 +288,10 @@ assign debug={clock_50mhz,clock_30khz};
 // Processor
 //
 wishbone_b3 sdr_bus ();
+wishbone_b3 rtc_bus ();
 wishbone_b3 lcd_bus ();
 wishbone_b3 sdr_bus_fast ();
+i2c_internal rtc_i2c ();
 
 logic proc_clk;
 assign proc_clk = clock_50mhz;
@@ -302,7 +307,9 @@ ThermoProcessor proc
    .vsync( ltm_vd ),
    .flash_out( cfi_proc ),
    .thermostat( thermostat_bus ),
-   .spi2_out( a2d_out )
+   .spi2_out( a2d_out ),
+   //.rtc( rtc_i2c )
+   .rtc_bus
 );
 
 assign ltm_r = bufcolor.r;
@@ -347,5 +354,21 @@ wb_sdram16 sdr
    .data(sdr_data),
    .clk_out( sdr_clk )
 );
+
+//i2c_output rtc_conv ( .internal(rtc_i2c), .external(rtc_out) );
+wb_i2c_master rtc_master
+(
+   .clk( proc_clk ),
+   .rst( reset ),
+   .bus( rtc_bus ),
+   .i2c( rtc_i2c )
+);
+
+
+assign scl = rtc_i2c.scl_oen_n?1'bz:1'b0;//rtc_i2c.scl_m2s;
+assign sda = rtc_i2c.sda_oen_n?1'bz:1'b0;//rtc_i2c.sda_m2s;
+
+assign rtc_i2c.scl_s2m = scl;
+assign rtc_i2c.sda_s2m = sda;
 
 endmodule

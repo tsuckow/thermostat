@@ -8,6 +8,7 @@
 #include <ls.h>
 #include "dosfs/filesystem.h"
 #include "temperature.h"
+#include "rtc.h"
 
 EmbeddedFileSystem efs;
 EmbeddedFile filer;
@@ -73,7 +74,7 @@ void Start()
 	test[3] = 0x33;
 	efsl_debug("%02x %2x %2x %2x",test[0],test[1],test[2],test[3]);
 	
-	uint32_t * test32 = test;
+	uint32_t * test32 = (uint32_t*)test;
 	efsl_debug("%08x",*test32);
    
    filesystem_init();
@@ -219,39 +220,43 @@ void Start()
     }
 
         free(image_data);
-	  
-	  */
-	  
-	  
-	  
-	  
-	  
-	  
-	  
- while(1)
+
+  */
+
+
+
+
+
+   rtcInit();
+
+   while(1)
    {
-	volatile uint32_t l;
-   for(l = 0; l < 100000; ++l);
-   uint32_t newval = 0;
-	
-	uint16_t temp1;
-	temp1 = temperature_convert1();
-	efsl_debug("TEMP1: %04x     ",temp1);
-	temp1 = temperature_convert2();
-	efsl_debug("TEMP2: %04x     ",temp1);
+      volatile uint32_t l;
+      for(l = 0; l < 100000; ++l);
+      uint32_t newval = 0;
 
-   if( temp1 <  ) newval |= 0x2;//Heat
-   if( temp2 <  ) newval |= 0x1;
-   if( temp1 >  ) newval |= 0x80;//AC
-   if( temp2 >  ) newval |= 0x40;
-   if( temp1 >  ) newval |= 0x10;//High Fan
-   if( temp2 >  ) newval |= 0x04;
+      uint16_t temp1;
+      temp1 = temperature_convert1();
+      efsl_debug("TEMP1: %04x     ",temp1);
+      temp1 = temperature_convert2();
+      efsl_debug("TEMP2: %04x     ",temp1);
 
-   newval = 0x28; //Fans always on
+      if( temp1 < 0x3c00 ) newval |= 0x2;//Heat
+      if( temp1 < 0x3c00 ) newval |= 0x1;
+      if( temp1 > 0x3c00 ) newval |= 0x80;//AC
+      if( temp1 > 0x3c00 ) newval |= 0x40;
+      if( temp1 > 0x3c00 ) newval |= 0x10;//High Fan
+      if( temp1 > 0x3c00 ) newval |= 0x04;
 
-   (*THERMO) = newval;
+      newval = 0x28; //Fans always on
+
+      (*THERMO) = newval;
+
+      uint8_t dat[4];
+      rtcRead( 0, dat, 4 );
+
+      efsl_debug("Time: %02x:%02x:%02x",dat[2],dat[1],dat[0]);
    }
-
 }
 
 int puts (__const char *__s)
