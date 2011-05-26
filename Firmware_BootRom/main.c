@@ -241,14 +241,14 @@ void Start()
       temp1 = temperature_convert2();
       efsl_debug("TEMP2: %04x     ",temp1);
 
+      newval = 0x28; //Fans always on
+
       if( temp1 < 0x3c00 ) newval |= 0x2;//Heat
       if( temp1 < 0x3c00 ) newval |= 0x1;
       if( temp1 > 0x3c00 ) newval |= 0x80;//AC
       if( temp1 > 0x3c00 ) newval |= 0x40;
       if( temp1 > 0x3c00 ) newval |= 0x10;//High Fan
       if( temp1 > 0x3c00 ) newval |= 0x04;
-
-      newval = 0x28; //Fans always on
 
       (*THERMO) = newval;
 
