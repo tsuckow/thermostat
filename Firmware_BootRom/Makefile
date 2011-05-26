@@ -19,14 +19,12 @@ AR = $(CROSS_COMPILE)ar
 #
 CF_ALL          = -g -c -Wunknown-pragmas -mhard-mul -mhard-div -msoft-float -I fs/inc --sysroot $(SYSROOT) -O3
 LF_ALL          = -Bstatic -static --stats $(LIBPATH) --sysroot $(SYSROOT)
-LL_ALL          = -lc -lgcc #-lstdc++ -lc -lgcc
+LL_ALL          = -lc -lgcc
 COMPLINK = $(CXX) $(CF_ALL) $(CF_TGT) $(LF_ALL) $(LF_TGT) -o $@ $< $(LL_TGT) $(LL_ALL)
 
 LIBPATH = -L=/usr/lib
-#LIBPATH  = -L $(TOOLCHAIN)/or32-linux/lib
-#LIBPATH += -L $(TOOLCHAIN)/or32-linux/sys-root/usr/lib/
+LIBPATH += -L $(TOOLCHAIN)/or32-linux/lib
 LIBPATH += -L $(TOOLCHAIN)/lib/gcc/or32-linux/4.5.1-or32-1.0rc4/
-LIBPATH += -L $(TOOLCHAIN)/lib/gcc/or32-linux/4.5.1-or32-1.0rc1/
 
 .PHONY: all
 all: realall
