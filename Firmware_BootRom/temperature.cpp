@@ -71,7 +71,7 @@ namespace
 		return(incoming);
 	}
 	
-	uint32_t const CONVTIME = 200000;//20000; //We assume 2 clocks per loop iteration
+	uint32_t const CONVTIME = 40000;//20000; //We assume 2 clocks per loop iteration
 	
 	//NO-OP NU NU CONV4 CONV3 CONV2 CONV1 DV4 DV2 NU NU CHS CAL NUL PDX PD
 	uint16_t const ADC_OP         = (1 << 15);
@@ -107,7 +107,6 @@ void temperature_init()
 	for( int volatile i = 0; i < CONVTIME; ++i );
 	spi_send(ADC_OP | ADC_CONV_21MS); //Step 4/3
 	for( int volatile i = 0; i < CONVTIME; ++i );
-	
 }
 
 uint16_t temperature_convert1()
