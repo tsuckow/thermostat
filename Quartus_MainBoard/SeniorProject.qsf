@@ -46,9 +46,9 @@ set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name DEVICE_FILTER_PIN_COUNT 484
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
-set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim (Verilog)"
+set_global_assignment -name EDA_SIMULATION_TOOL "<None>"
 set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
-set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
+set_global_assignment -name EDA_OUTPUT_DATA_FORMAT NONE -section_id eda_simulation
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
@@ -345,10 +345,6 @@ set_global_assignment -name CDF_FILE ../Firmware_BootRom/reboot.cdf
 set_location_assignment PIN_T12 -to scl
 set_location_assignment PIN_R14 -to sda
 set_global_assignment -name SYNTH_TIMING_DRIVEN_SYNTHESIS ON
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to scl
-set_instance_assignment -name SLEW_RATE 2 -to scl
-set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to sda
-set_instance_assignment -name SLEW_RATE 2 -to sda
 set_instance_assignment -name CONNECT_TO_SLD_NODE_ENTITY_PORT acq_trigger_in[0] -to rtc_i2c.scl_m2s -section_id auto_signaltap_0
 set_instance_assignment -name CONNECT_TO_SLD_NODE_ENTITY_PORT acq_trigger_in[1] -to rtc_i2c.scl_oen_n -section_id auto_signaltap_0
 set_instance_assignment -name CONNECT_TO_SLD_NODE_ENTITY_PORT acq_trigger_in[2] -to rtc_i2c.scl_oen_n~direct -section_id auto_signaltap_0
@@ -375,4 +371,6 @@ set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_INVERSION_MASK=00
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_INVERSION_MASK_LENGTH=55" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_NODE_CRC_LOWORD=9947" -section_id auto_signaltap_0
 set_global_assignment -name SLD_NODE_PARAMETER_ASSIGNMENT "SLD_NODE_CRC_HIWORD=64327" -section_id auto_signaltap_0
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to scl
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to sda
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

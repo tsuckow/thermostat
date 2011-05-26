@@ -30,11 +30,9 @@ void rtcInit()
    //Turn on RTC
    uint8_t dat;
    rtcRead( 0, &dat, 1 );
-   dat |= 0x80;
+   dat &= ~0x80;
    rtcWrite( 0, &dat, 1 );
-   efsl_debug("Timeinit: %02x",dat);
    rtcRead( 0, &dat, 1 );
-   efsl_debug("TimeINIT: %02x",dat);
 }
 
 void rtcRead( uint8_t address, uint8_t * const data, unsigned int num )
