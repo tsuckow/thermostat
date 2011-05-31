@@ -41,7 +41,7 @@ Date       Version Description                 Author
 	    Redzone: We are not allowed to touch 128 bytes past stack pointer.
 	    We could also use gcc flag -mredzone=0
 	    */
-	    l.addi r1,r1,-128
+	    l.addi r1,r1,-REDZONE_SIZE
 		
         l.addi r1,r1,-4
         l.sw 0x00(r1),r9
@@ -57,9 +57,9 @@ Date       Version Description                 Author
 
         l.lwz r9 ,0x00(r1)
         l.addi r1,r1,4
-		
-		/*Restore Redzone*/
-		l.addi r1,r1,128
+
+      /*Restore Redzone*/
+      l.addi r1,r1,REDZONE_SIZE
         
 		//Return from exception
         l.rfe		
@@ -198,7 +198,7 @@ __external_IRQ:
    Redzone: We are not allowed to touch 128 bytes past stack pointer.
    We could also use gcc flag -mredzone=0
    */
-   l.addi r1,r1,-128
+   l.addi r1,r1,-REDZONE_SIZE
 
    //Reserve Return Address
    l.addi r1,r1,-4
@@ -222,7 +222,7 @@ __external_IRQ:
    l.addi r1,r1,4
 
    /*Restore Redzone*/
-   l.addi r1,r1,128
+   l.addi r1,r1,REDZONE_SIZE
 
    //Return from exception
    l.rfe
@@ -274,11 +274,13 @@ save_state:
    l.sw 0x6c(r1),r29
    l.sw 0x70(r1),r30
    l.sw 0x1C(r1),r31
+   
    l.jr r9
    l.nop
 
 // Restore current state
 restore_state:
+
    l.lwz r2  ,0x0(r1)
    l.lwz r3  ,0x4(r1)
    l.lwz r4  ,0x8(r1)
