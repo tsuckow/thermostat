@@ -72,6 +72,8 @@
 /*                                                                            */
 /******************************************************************************/
 
+#define REDZONE_SIZE (2096)
+
 #define MAX_GRPS (32)
 #define MAX_SPRS_PER_GRP_BITS (11)
 #define MAX_SPRS_PER_GRP (1 << MAX_SPRS_PER_GRP_BITS)

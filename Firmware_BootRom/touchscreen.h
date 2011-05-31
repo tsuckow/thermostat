@@ -19,8 +19,12 @@ extern "C"
    extern uint8_t const snowFlakeEnd   asm("_binary_snow_flake_png_end");
    static volatile uint32_t (* const SCREEN)[800] = (volatile uint32_t (* const)[800])0x02000000;
 
+void print(unsigned x, unsigned y,char const * str, ...);
    void printString(unsigned x, unsigned y, unsigned char const * str);
 
+void pngdemo();
+
+   
 #ifdef __cplusplus
 }
 #endif

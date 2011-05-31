@@ -32,6 +32,16 @@ inline uint32_t getExceptionEA()
 	return tmp;
 }
 
+inline uint32_t getExceptionPC()
+{
+	register uint32_t tmp;
+	asm("l.mfspr %0,r0,%1":"=r"(tmp):"n"(SPR_EPCR_BASE):);
+	return tmp;
+}
+
+void touch_event();
+void temp_event();
+
 void external_exception()
 {
    unsigned long inter;
@@ -39,12 +49,16 @@ void external_exception()
 
    if( inter & 0x1 )
    {
+      touch_event();
+
       spr_int_clearflags( 0x01 );
    }
 
-   if( inter & 0x2 )
+   if( inter & 0x4 )
    {
-      spr_int_clearflags( 0x02 );
+      temp_event();
+
+      spr_int_clearflags( 0x04 );
    }
 }
 
@@ -58,6 +72,17 @@ void printExceptionError(char const * str)
 	
 	len = strlen(buf);
 	printString(800/2 - len*8/2,480/2-4, reinterpret_cast<unsigned char const *>(buf) );
+	
+	snprintf( buf, 30, "0x%X", getExceptionPC() );
+	
+	len = strlen(buf);
+	printString(800/2 - len*8/2,480/2-12, reinterpret_cast<unsigned char const *>(buf) );
+
+   register uint32_t stack asm("r1");
+   snprintf( buf, 30, "0x%X", stack );
+
+   len = strlen(buf);
+	printString(800/2 - len*8/2,480/2-20, reinterpret_cast<unsigned char const *>(buf) );
 	
 	while(true);
 }

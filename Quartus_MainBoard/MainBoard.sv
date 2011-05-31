@@ -27,6 +27,7 @@ output [9:0] led_out,
 cfi.master   flash_out,
 IntellitecSignal.slave intellitec,
 spi.master   a2d_out,
+input        a2d_busy_n,
 //i2c_external.master rtc_out,
 inout scl,
 inout sda,
@@ -134,11 +135,11 @@ lcd_spi_cotroller	u1	(
 					.o3WIRE_BUSY_n(ltm_3wirebusy_n)
 					);
 
-wire touch_irq;
+//wire touch_irq;
 wire [11:0] x_coord;
 wire [11:0] y_coord;
 wire [1:0] touchdiag;
-wire touching;
+wire touching,touch_irq;
 // Touch Screen Digitizer ADC configuration //
 touch_controller touchc(
 					.iCLK(clock_50mhz),
@@ -153,6 +154,11 @@ touch_controller touchc(
 					.oY_COORD(y_coord),
 					.oTouch(touching)
 					);
+
+lcd::touchevent touch;
+assign touch.touching = touching;
+assign touch.x_coord = x_coord;
+assign touch.y_coord = y_coord;
 
 reg [9:0] count;
 reg touching2;
@@ -281,8 +287,8 @@ wb_reg thermostatreg
 
 wire [1:0] shed;
 IntellitecThermostatControl tc (clock_30khz, ac1, ac2, f1O, f1H, f2O, f2H, ht1, ht2, intellitec, sync12, shed);
-assign led_out = {shed,count[7:0]};
-assign debug={clock_50mhz,clock_30khz};
+assign led_out = {shed,adc_penirq_n,touch_irq,touching};
+assign debug={clock_50mhz,clock_30khz,adc_penirq_n};
 
 //
 // Processor
@@ -304,12 +310,13 @@ ThermoProcessor proc
    .lcd_bus( lcd_bus ),
    .sdr_bus( sdr_bus ),
    .spi_out,
-   .vsync( ltm_vd ),
+   .touch( touch ),
    .flash_out( cfi_proc ),
    .thermostat( thermostat_bus ),
    .spi2_out( a2d_out ),
    //.rtc( rtc_i2c )
-   .rtc_bus
+   .rtc_bus,
+   .a2d_busy_n
 );
 
 assign ltm_r = bufcolor.r;

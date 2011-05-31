@@ -17,9 +17,9 @@ AR = $(CROSS_COMPILE)ar
 
 ### Build flags for all targets
 #
-CF_ALL          = -g -c -Wunknown-pragmas -mhard-mul -mhard-div -msoft-float -I fs/inc --sysroot $(SYSROOT) -O3
+CF_ALL          = -g -c -Wunknown-pragmas -mhard-mul -mhard-div -msoft-float -I fs/inc -I libpng-out/include --sysroot $(SYSROOT) -O3
 LF_ALL          = -Bstatic -static --stats $(LIBPATH) --sysroot $(SYSROOT)
-LL_ALL          = -lc -lgcc
+LL_ALL          = -lc -lgcc -lm
 COMPLINK = $(CXX) $(CF_ALL) $(CF_TGT) $(LF_ALL) $(LF_TGT) -o $@ $< $(LL_TGT) $(LL_ALL)
 
 LIBPATH = -L=/usr/lib

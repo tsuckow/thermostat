@@ -6,6 +6,7 @@ extern "C"
 #endif
 
 void efsl_debug(char const * format, ...);
+void debug(char const * format, ...);
 
 #ifdef __cplusplus
 }

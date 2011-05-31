@@ -9,6 +9,8 @@
 #include "dosfs/filesystem.h"
 #include "temperature.h"
 #include "rtc.h"
+#include "debug.h"
+#include "math.h"
 
 EmbeddedFileSystem efs;
 EmbeddedFile filer;
@@ -50,10 +52,7 @@ void Start()
    temperature_init();
    
    printString(0,479-8*3,"==System Ready==");
-   
-   
-//   spr_int_setmask( 0x3 );
-//   spr_int_enable();
+  
 
 
    debug_row = 0;
@@ -61,24 +60,14 @@ void Start()
    color = 0x00FF0000;
    buf[0] = 'z';
    buf[1] = 0;
-   
-   if(spr_is_little_endian())
-	printf("Little Endian\n");
-   else
-	printf("Big Endian\n");
-	
-	uint8_t test[4];
-	test[0] = 0x00;
-	test[1] = 0x11;
-	test[2] = 0x22;
-	test[3] = 0x33;
-	efsl_debug("%02x %2x %2x %2x",test[0],test[1],test[2],test[3]);
-	
-	uint32_t * test32 = (uint32_t*)test;
-	efsl_debug("%08x",*test32);
+    
+   spr_int_clearflags( 0x4 | 0x02 | 0x1 );
+   spr_int_setmask( 0x4 | 0x1 );
+   spr_int_enable();
+
    
    filesystem_init();
-   
+
 //      syscall(0x80, &bob);
 
 	if ( ( res = efs_init( &efs, 0 ) ) == 0 )
@@ -143,11 +132,7 @@ void Start()
 	  
 	  
 	  
-	  
-	  
-	  
-	  
-	  
+pngdemo();
 	  
 	  
 	  
@@ -232,23 +217,35 @@ void Start()
    while(1)
    {
       volatile uint32_t l;
-      for(l = 0; l < 100000; ++l);
+      //for(l = 0; l < 100000; ++l);
       uint32_t newval = 0;
 
-      uint16_t temp1;
-      temp1 = temperature_convert1();
+      extern uint16_t temp1,temp2;
+      /*
+	  temp1 = temperature_convert1();
       efsl_debug("TEMP1: %04x     ",temp1);
-      temp1 = temperature_convert2();
-      efsl_debug("TEMP2: %04x     ",temp1);
+      temp2 = temperature_convert2();
+      efsl_debug("TEMP2: %04x     ",temp2);
+	  */
+	  
+      newval = 0x00;
 
-      newval = 0x28; //Fans always on
+      {
+         float tmp;
+         tmp = temp1/4123.57;
+         tmp = log(tmp);
+         tmp = -18.98/tmp;
+         print(20,30,"TEMP1: %0.2f     ",tmp);
+      }
 
-      if( temp1 < 0x3c00 ) newval |= 0x2;//Heat
-      if( temp1 < 0x3c00 ) newval |= 0x1;
-      if( temp1 > 0x3c00 ) newval |= 0x80;//AC
-      if( temp1 > 0x3c00 ) newval |= 0x40;
-      if( temp1 > 0x3c00 ) newval |= 0x10;//High Fan
-      if( temp1 > 0x3c00 ) newval |= 0x04;
+      print(20,20,"TEMP1: %d     ",temp1);
+      print(400,20,"TEMP2: %d     ",temp2);
+      if( temp1 < 0x3a00 ) newval |= 0x2;//Heat
+      if( temp2 < 0x3a00 ) newval |= 0x1;
+      if( temp1 > 0x3b00 ) newval |= 0xA0;//AC & Fan
+      if( temp2 > 0x3b00 ) newval |= 0x48;
+      if( temp1 > 0x3e00 ) newval |= 0x10;//High Fan
+      if( temp2 > 0x3e00 ) newval |= 0x04;
 
       (*THERMO) = newval;
 
@@ -265,7 +262,8 @@ int puts (__const char *__s)
 	debug_row = (debug_row + 1) % 32;
 }
 
-void efsl_debug(unsigned char const * format, ...)
+//deprecated
+void efsl_debug(char const * format, ...)
 {
    char buffer[100];
    va_list args;
@@ -278,4 +276,70 @@ void efsl_debug(unsigned char const * format, ...)
    va_end (args);
 
    debug_row = (debug_row + 1) % 32;
+}
+
+void debug(char const * format, ...)
+{
+   char buffer[100];
+   va_list args;
+   va_start (args, format);
+
+   vsnprintf (buffer,100,format, args);
+
+   printString(20,400-debug_row*8,buffer);
+
+   va_end (args);
+
+   debug_row = (debug_row + 1) % 32;
+}
+
+void debugregistersin(uint32_t * stack)
+{
+   char buf[10*9+1];
+   int i = 0;
+   debug("Enter Exception                                                  ");
+   debug("Enter Exception %.8x %.8x                             ",stack[-1],spr_int_getflags() );
+   debug("Enter Exception                                                  ");
+   for(i = 0; i < 10; i++)
+   {
+      snprintf(buf+i*9,10,"%.8x ",stack[i]);
+   }
+   debug(buf);
+
+   for(i = 10; i < 20; i++)
+   {
+      snprintf(buf+(i-10)*9,10,"%.8x ",stack[i]);
+   }
+   debug(buf);
+
+   for(i = 20; i < 29; i++)
+   {
+      snprintf(buf+(i-20)*9,10,"%.8x         ",stack[i]);
+   }
+
+   debug(buf);
+}
+void debugregistersout(uint32_t * stack)
+{
+   char buf[10*9+1];
+   int i = 0;
+   debug("Leave Exception                                                  ");
+   for(i = 0; i < 10; i++)
+   {
+      snprintf(buf+i*9,10,"%.8x ",stack[i]);
+   }
+   debug(buf);
+
+   for(i = 10; i < 20; i++)
+   {
+      snprintf(buf+(i-10)*9,10,"%.8x ",stack[i]);
+   }
+   debug(buf);
+
+   for(i = 20; i < 29; i++)
+   {
+      snprintf(buf+(i-20)*9,10,"%.8x         ",stack[i]);
+   }
+
+   debug(buf);
 }

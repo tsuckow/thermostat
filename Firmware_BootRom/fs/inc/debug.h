@@ -124,7 +124,7 @@
 	#endif
 
    #ifndef DBG
-      void efsl_debug(unsigned char const * format, ...);
+      void efsl_debug(char const * format, ...);
       #define DBG(x) efsl_debug x
    #endif
 

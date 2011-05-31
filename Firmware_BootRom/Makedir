@@ -1,5 +1,6 @@
 #$(call buildexe,boot.or32,main.o BootReset.o test.o touchscreen.o exception.o,,-Lfs -lefsl,fs/libefsl.a)
-$(call buildexe,boot.or32,main.o BootReset.o touchscreen.o exception.o font.o temperature.o rtc.o snow-flake.o fs/libefsl.a dosfs/libfs.a libpng-out/lib/libpng.a)
+#zlib-out/lib/libz.a
+$(call buildexe,boot.or32,pseudo/pseudo_fileio.o main.o BootReset.o touchscreen.o exception.o font.o temperature.o rtc.o snow-flake.o malloc.o  png.o fs/libefsl.a dosfs/libfs.a libpng-out/lib/libpng.a,,-Lzlib-out/lib -lz)
 
 $(call incdir,fs)
 $(call incdir,dosfs)

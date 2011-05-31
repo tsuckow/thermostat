@@ -118,3 +118,26 @@ endgenerate
 	assign bus.dat_s2m = value;
 	assign out = value;
 endmodule
+
+module wb_reg_ro
+#(
+   parameter DATA_WIDTH = 32
+)
+(
+   wishbone_b3.slave bus,
+   input logic [DATA_WIDTH-1:0] in,
+   output logic read
+);
+   logic error;//Indicates a bus error state
+   logic active;//Indicates we are performing a write or read action.
+
+   assign error = bus.we;
+   assign active = bus.cyc & bus.stb;
+   assign bus.ack = active & (~error);
+   assign bus.rty = 1'b0;
+   assign bus.err = active & error;
+   assign bus.dat_s2m = in;
+
+   assign read = active & (~bus.we);
+endmodule
+

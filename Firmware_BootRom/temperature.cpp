@@ -2,54 +2,56 @@
 
 #include <unistd.h>
 #include "debug.h"
-
+#include "touchscreen.h"
 
 namespace
 {
-	volatile uint32_t * const TEMP_SPI = (uint32_t * const)0xFFFF0040; //SPI Module Address, change this
-	size_t const SPI_Rx0  = 0;
-	size_t const SPI_Tx0  = 0;
-	size_t const SPI_CTRL = 4;
-	size_t const SPI_DIV  = 5;
-	size_t const SPI_SS   = 6;
+   bool temp2_next = false;
 
-	uint32_t const SPI_CTRL_ASS  = (1 << 13); //Auto Slave Select
-	uint32_t const SPI_CTRL_TXNEG= (1 << 10);
-	uint32_t const SPI_CTRL_RXNEG= (1 << 9);
-	uint32_t const SPI_CTRL_BUSY = (1 << 8);  //Busy Flag/Start XFER
+   volatile uint32_t * const TEMP_SPI = (uint32_t * const)0xFFFF0040; //SPI Module Address, change this
+   size_t const SPI_Rx0  = 0;
+   size_t const SPI_Tx0  = 0;
+   size_t const SPI_CTRL = 4;
+   size_t const SPI_DIV  = 5;
+   size_t const SPI_SS   = 6;
 
-	void spi_ss_on()
-	{
-		TEMP_SPI[SPI_SS] = 1;
-	}
+   uint32_t const SPI_CTRL_ASS  = (1 << 13); //Auto Slave Select
+   uint32_t const SPI_CTRL_TXNEG= (1 << 10);
+   uint32_t const SPI_CTRL_RXNEG= (1 << 9);
+   uint32_t const SPI_CTRL_BUSY = (1 << 8);  //Busy Flag/Start XFER
 
-	void spi_ss_off()
-	{
-		TEMP_SPI[SPI_SS] = 0;
-	}
+   void spi_ss_on()
+   {
+      TEMP_SPI[SPI_SS] = 1;
+   }
 
-	void spi_ss_auto()
-	{
-		uint32_t ctrl = TEMP_SPI[SPI_CTRL];
-		ctrl |= SPI_CTRL_ASS;
-		TEMP_SPI[SPI_CTRL] = ctrl;
-	}
+   void spi_ss_off()
+   {
+      TEMP_SPI[SPI_SS] = 0;
+   }
 
-	void spi_ss_manual()
-	{
-		uint32_t ctrl = TEMP_SPI[SPI_CTRL];
-		ctrl &= ~SPI_CTRL_ASS;
-		TEMP_SPI[SPI_CTRL] = ctrl;
-	}
+   void spi_ss_auto()
+   {
+      uint32_t ctrl = TEMP_SPI[SPI_CTRL];
+      ctrl |= SPI_CTRL_ASS;
+      TEMP_SPI[SPI_CTRL] = ctrl;
+   }
 
-	unsigned spi_busy()
-	{
-		return TEMP_SPI[SPI_CTRL] & SPI_CTRL_BUSY;
-	}
-	
-	void spi_setSpeed(uint8_t speed)
-	{
-		speed &= 0xFE;
+   void spi_ss_manual()
+   {
+      uint32_t ctrl = TEMP_SPI[SPI_CTRL];
+      ctrl &= ~SPI_CTRL_ASS;
+      TEMP_SPI[SPI_CTRL] = ctrl;
+   }
+
+   unsigned spi_busy()
+   {
+      return TEMP_SPI[SPI_CTRL] & SPI_CTRL_BUSY;
+   }
+
+   void spi_setSpeed(uint8_t speed)
+   {
+      speed &= 0xFE;
 		TEMP_SPI[SPI_DIV] = speed;
 	}
 	
@@ -62,7 +64,6 @@ namespace
 	{
 		uint16_t incoming;
 
-		while( spi_busy() );
 		TEMP_SPI[SPI_Tx0] = outgoing;
 		spi_startXFER();
 		while( spi_busy() );
@@ -71,60 +72,71 @@ namespace
 		return(incoming);
 	}
 	
-	uint32_t const CONVTIME = 40000;//20000; //We assume 2 clocks per loop iteration
+	uint32_t const CONVTIME = 4*20000;//20000; //We assume 2 clocks per loop iteration
 	
 	//NO-OP NU NU CONV4 CONV3 CONV2 CONV1 DV4 DV2 NU NU CHS CAL NUL PDX PD
-	uint16_t const ADC_OP         = (1 << 15);
-	uint16_t const ADC_CONV_21MS  = (0x9 << 9);
-	uint16_t const ADC_CONV_41MS  = (0x3 << 9);
-	uint16_t const ADC_CONV_164MS = (0x6 << 9);
-	uint16_t const ADC_CONV_205MS = (0x0 << 9);
-	uint16_t const ADC_CHS        = (1 << 4);
-	uint16_t const ADC_CAL        = (1 << 3);
-	uint16_t const ADC_NUL        = (1 << 2);
+   uint16_t const ADC_OP         = (1 << 15);
+   uint16_t const ADC_CONV_21MS  = (0x9 << 9);
+   uint16_t const ADC_CONV_41MS  = (0x3 << 9);
+   uint16_t const ADC_CONV_164MS = (0x6 << 9);
+   uint16_t const ADC_CONV_205MS = (0x0 << 9);
+   uint16_t const ADC_DV4        = (1 << 8);
+   uint16_t const ADC_DV2        = (1 << 7);
+   uint16_t const ADC_CHS        = (1 << 4);
+   uint16_t const ADC_CAL        = (1 << 3);
+   uint16_t const ADC_NUL        = (1 << 2);
+
+   uint16_t ADC_CONFIG = ADC_OP | ADC_CONV_164MS | ADC_DV4;
 }
 
 void temperature_init()
 {
-	spi_ss_off();
-	spi_ss_manual();
-	
-	TEMP_SPI[SPI_CTRL] |= 16; //16 bit transfers
-	TEMP_SPI[SPI_CTRL] |= SPI_CTRL_TXNEG; //Transmit changes on negedge / Latch Pos edge
-	
-	spi_setSpeed( 100 );
-	
-	spi_ss_on();
-	spi_ss_auto();
-	
-	//Calibrate CH1
-	
-	spi_send(ADC_OP | ADC_CONV_21MS | ADC_CAL | ADC_NUL); //Step 1/3
-	for( int volatile i = 0; i < CONVTIME; ++i );
-	spi_send(ADC_OP | ADC_CONV_21MS | ADC_CAL          ); //Step 2/3
-	for( int volatile i = 0; i < CONVTIME*20; ++i );
-	spi_send(ADC_OP | ADC_CONV_21MS           | ADC_NUL); //Step 3/3
-	for( int volatile i = 0; i < CONVTIME; ++i );
-	spi_send(ADC_OP | ADC_CONV_21MS); //Step 4/3
-	for( int volatile i = 0; i < CONVTIME; ++i );
+   spi_ss_off();
+   spi_ss_manual();
+
+   TEMP_SPI[SPI_CTRL] |= 16; //16 bit transfers
+   TEMP_SPI[SPI_CTRL] |= SPI_CTRL_TXNEG; //Transmit changes on negedge / Latch Pos edge
+
+   spi_setSpeed( 20 );
+
+   spi_ss_on();
+   spi_ss_auto();
+
+   //Calibrate CH1
+
+   spi_send(ADC_CONFIG | ADC_CAL | ADC_NUL); //Step 1/3
+   for( int volatile i = 0; i < CONVTIME; ++i );
+   spi_send(ADC_CONFIG | ADC_CAL          ); //Step 2/3
+   for( int volatile i = 0; i < CONVTIME*20; ++i );
+   spi_send(ADC_CONFIG           | ADC_NUL); //Step 3/3
+   for( int volatile i = 0; i < CONVTIME; ++i );
+   spi_send(ADC_CONFIG); //Step 4/3
+   for( int volatile i = 0; i < CONVTIME; ++i );
 }
 
-uint16_t temperature_convert1()
+int16_t temperature_lastconvert1()
 {
-	uint16_t temp;
-	spi_send(ADC_OP | ADC_CONV_21MS);
-	for( int volatile i = 0; i < CONVTIME; ++i );
-	temp = spi_send(ADC_OP | ADC_CONV_21MS);
-	for( int volatile i = 0; i < CONVTIME; ++i );
-	return temp;
+   return (int16_t)spi_send(ADC_CONFIG);
 }
 
-uint16_t temperature_convert2()
+int16_t temperature_lastconvert2()
 {
-	uint16_t temp;
-	spi_send(ADC_OP | ADC_CONV_21MS | ADC_CHS);
-	for( int volatile i = 0; i < CONVTIME; ++i );
-	temp = spi_send(ADC_OP | ADC_CONV_21MS | ADC_CHS);
-	for( int volatile i = 0; i < CONVTIME; ++i );
-	return temp;
+   return (int16_t)spi_send(ADC_CONFIG | ADC_CHS);
+}
+
+int16_t temp1,temp2;
+void temp_event()
+{
+   //We alernate what temp we read and queue the next
+   if( temp2_next )
+   {
+      temp2 = temperature_lastconvert1();
+   }
+   else
+   {
+      temp1 = temperature_lastconvert2();
+   }
+
+   temp2_next = !temp2_next;
+   //debug("Temp Event");
 }

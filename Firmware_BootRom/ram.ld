@@ -7,7 +7,7 @@ MEMORY
    ram         : ORIGIN = 0x02200000, LENGTH = 0x00600000
 }
 
-STACK_SIZE = 0x1000;
+STACK_SIZE = 0x4000;
 
 /*
   The following section defines where to put the different input sections.
@@ -35,6 +35,28 @@ SECTIONS
       *(.gcc_except_table)
    } > flash
 
+	/*We don't really support init_array but its a linker error and it is/should be empty...*/
+   .preinit_array     :
+  {
+    PROVIDE_HIDDEN (__preinit_array_start = .);
+    KEEP (*(.preinit_array))
+    PROVIDE_HIDDEN (__preinit_array_end = .);
+  }
+  .init_array     :
+  {
+     PROVIDE_HIDDEN (__init_array_start = .);
+     KEEP (*(SORT(.init_array.*)))
+     KEEP (*(.init_array))
+     PROVIDE_HIDDEN (__init_array_end = .);
+  }
+  .fini_array     :
+  {
+    PROVIDE_HIDDEN (__fini_array_start = .);
+    KEEP (*(.fini_array))
+    KEEP (*(SORT(.fini_array.*)))
+    PROVIDE_HIDDEN (__fini_array_end = .);
+  }
+   
    .ctors :
    {
     /* gcc uses crtbegin.o to find the start of
@@ -67,7 +89,9 @@ SECTIONS
     .bss ALIGN(0x4):
    {
       __RAM_SBSS = .;
-      *(.bss .bss.*)
+      *(.dynbss)
+	   *(.bss .bss.* .gnu.linkonce.b.*)
+	   *(COMMON)
       __RAM_EBSS = .;
    } > ram
 
