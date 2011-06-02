@@ -107,21 +107,21 @@ void temperature_init()
 
    //Calibrate CH1
 
-	spr_int_setmask(0x04);//Hackish, clean this up
+   spr_int_setmask(0x04);//Hackish, clean this up
    spi_send(ADC_CONFIG | ADC_CAL | ADC_NUL); //Step 1/3
-   spr_int_clearflags(0x4);
+   spr_int_clearflags(0x0);
    while( spr_int_getflags() & 0x4 == 0 );
    //for( int volatile i = 0; i < CONVTIME; ++i );
    spi_send(ADC_CONFIG | ADC_CAL          ); //Step 2/3
-   spr_int_clearflags(0x4);
+   spr_int_clearflags(0x0);
    while( spr_int_getflags() & 0x4 == 0 );
    //for( int volatile i = 0; i < CONVTIME*20; ++i );
    spi_send(ADC_CONFIG           | ADC_NUL); //Step 3/3
-   spr_int_clearflags(0x4);
+   spr_int_clearflags(0x0);
    while( spr_int_getflags() & 0x4 == 0 );
    //for( int volatile i = 0; i < CONVTIME; ++i );
    spi_send(ADC_CONFIG); //Step 4/3
-   spr_int_clearflags(0x4);
+   spr_int_clearflags(0x0);
    while( spr_int_getflags() & 0x4 == 0 );
    //for( int volatile i = 0; i < CONVTIME; ++i );
 }
