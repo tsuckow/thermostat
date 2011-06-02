@@ -1,5 +1,0 @@
-OBJ:=src/efs.o src/plibc.o src/disc.o src/partition.o src/time.o src/fs.o src/fat.o src/file.o src/dir.o src/mkfs.o src/debug.o src/ioman.o src/ui.o src/extract.o src/interfaces/sd.o
-OBJ+=src/ls.o
-OBJ+=src/interfaces/OPENRISC_spi.o
-
-$(call builda,libefsl.a,$(OBJ))

@@ -1,4 +1,0 @@
-OBJ:=dosfs.o
-OBJ+=sd.o sd_spi.o filesystem.o
-
-$(call builda,libfs.a,$(OBJ))

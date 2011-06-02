@@ -185,24 +185,7 @@ pngdemo();
 
 int puts (__const char *__s)
 {
-	printString(40,400-debug_row*8,__s);
-	debug_row = (debug_row + 1) % 32;
-}
-
-//deprecated
-void efsl_debug(char const * format, ...)
-{
-   char buffer[100];
-   va_list args;
-   va_start (args, format);
-
-   vsnprintf (buffer,100,format, args);
-
-   printString(20,400-debug_row*8,buffer);
-
-   va_end (args);
-
-   debug_row = (debug_row + 1) % 32;
+   debug("printf deprecated: %s", __s);
 }
 
 void debug(char const * format, ...)
