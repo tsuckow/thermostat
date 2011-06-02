@@ -23,6 +23,12 @@ namespace
       int x = center - (num*8*size)/2;
       printStringEx(x,top,size,(unsigned char *)buffer);
    }
+
+   void setPixel(size_t x, size_t y, uint32_t color)
+   {
+      if( y >= 0 && x >= 0 && y < 480 && x < 800 )
+         SCREEN[y][x] = color;
+   }
 }
 
 
@@ -75,16 +81,16 @@ void printStringEx(unsigned x, unsigned y, unsigned size, unsigned char const * 
 
          for(xx = 7; xx >= 0; xx--)
          {
-			for(int ys = 0; ys < size; ++ys)
-			{
-				for(int xs = 0; xs < size; ++xs)
-				{
-					if( (row & 0x01) == 0x01)
-					   SCREEN[y-yy*size-ys][x+xx*size+xs] = 0x00DDDDDD;
-					else
-					   SCREEN[y-yy*size-ys][x+xx*size+xs] = 0x00000000;
-				}
-			}
+            for(int ys = 0; ys < size; ++ys)
+            {
+               for(int xs = 0; xs < size; ++xs)
+               {
+                  if( (row & 0x01) == 0x01)
+                     setPixel( x+xx*size+xs, y-yy*size-ys, 0x00DDDDDD);
+                  else
+                     setPixel( x+xx*size+xs, y-yy*size-ys, 0x00000000);
+               }
+            }
            row = row >> 1;
          }
       }
@@ -100,7 +106,7 @@ void clearScreen(uint32_t color)
    {
       for(size_t x = 0; x < 800; ++x)
       {
-         SCREEN[y][x] = color;
+         setPixel( x, y, color );
       }
    }
 }
@@ -108,7 +114,18 @@ void clearScreen(uint32_t color)
 void touch_event()
 {
    uint32_t val = *TOUCHREG;
-   debug("Touched %08x", val);
-   debug("          ");
+   uint32_t x = 800 - ( 800 * static_cast<uint32_t>((val >> 16) & 0x0FFF) ) / 0x0FFF;
+   uint32_t y = 480 - ( 480 * static_cast<uint32_t>((val >> 00) & 0x0FFF) ) / 0x0FFF;
+   bool touched = val >> 31;
+   if(touched)
+   {
+      debug("Touched X:%03hu Y:%03hu", x,y);
+      printEx(x,y,1,"X");
+   }
+   else
+   {
+      debug("Release            ");
+   }
+
 }
 
