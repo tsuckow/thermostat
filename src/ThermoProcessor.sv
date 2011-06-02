@@ -77,7 +77,9 @@ wishbone_b3 slaves  [8] ();
 logic int1,int3;
 interruptChange touchInt (.in(touch.touching),.clk(clock),.rst(rst),.clr(touch_clr_int),.out(int1));
 //interruptEdge   a2dInt (.in(a2d_busy_n),.clk(clock),.rst(rst),.clr(slaves[5].stb),.out(int2));
-assign int3 = a2d_busy_n;
+
+always@(negedge clock)
+	int3 = a2d_busy_n;
 
 //
 // Proc
