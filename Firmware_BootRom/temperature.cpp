@@ -161,9 +161,4 @@ void temp_event()
    }
 
    temp2_next = !temp2_next;
-
-   if( temp2 < 0 )
-   {
-      debug("Neg Temp2");
-   }
 }

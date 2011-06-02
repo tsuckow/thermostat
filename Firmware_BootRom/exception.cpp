@@ -50,16 +50,14 @@ void external_exception()
    if( inter & 0x1 )
    {
       touch_event();
-
-      spr_int_clearflags( 0x01 );
    }
 
    if( inter & 0x4 )
    {
       temp_event();
-
-      spr_int_clearflags( 0x04 );
    }
+
+   spr_int_clearflags( 0x0 );//Stupid OR1200. OR1000 states use 1 to clear but OR1200 just takes the value.
 }
 
 void printExceptionError(char const * str)
