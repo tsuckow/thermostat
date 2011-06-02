@@ -3,18 +3,11 @@
 #include <unistd.h>
 #include "touchscreen.h"
 #include "sprs.h"
-#include <efs.h>
 #include <stdarg.h>
-#include <ls.h>
-#include "dosfs/filesystem.h"
 #include "temperature.h"
 #include "rtc.h"
 #include "debug.h"
 #include "math.h"
-
-EmbeddedFileSystem efs;
-EmbeddedFile filer;
-DirList list;
 
 static volatile uint32_t * const SDRAM = (uint32_t * const)0x02000000;
 
@@ -65,72 +58,6 @@ void Start()
    spr_int_setmask( 0x4 | 0x1 );
    spr_int_enable();
 
-   
-   filesystem_init();
-
-//      syscall(0x80, &bob);
-
-	if ( ( res = efs_init( &efs, 0 ) ) == 0 )
-	{
-		color = 0x00FFFFFF;
-		
-		ls_openDir(&list,&(efs.myFs),"/");
-		
-		while (ls_getNext(&list)==0)
-		{
-			DBG((TXT("DIR: %s (%li bytes)\n"),list.currentEntry.FileName,list.currentEntry.FileSize));
-		}
-		
-		if ( file_fopen( &filer, &efs.myFs , "test.txt" , 'r' ) == 0 )
-		{
-			unsigned e;
-			efsl_debug("File Opened");
-			color = 0x0000FF00;
-			
-			if( (e = file_read( &filer, 29, buf ) ) != 0 )
-			{
-					buf[e]='\0';
-					color = 0x00FFFF00;
-					DBG((TXT("Read: %d bytes\n"),e));
-			}
-			
-		  file_fclose( &filer );
-	   }
-	}
-	fs_umount(&efs.myFs);
-	
-   /*
-      for(i = 0; i < 480; ++i)
-      {
-         for(j = 0; j < 800; ++j)
-         {
-            if(i == 0 || i == 479 || j == 0 || j == 799)
-               SDRAM[i*800+j] = color;
-            else if( clear == 0 )
-               SDRAM[i*800+j] = (uint8_t)(j+bob+i);
-         }
-      }
-
-     */
-	 printString(20,440,buf);
-      printString(20,420,"This is a test! 1234567890");
-
-      bob++;
-      clear = (clear + 1)%10;
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
 	  
 pngdemo();
 	  
