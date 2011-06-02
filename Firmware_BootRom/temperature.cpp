@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include "debug.h"
 #include "touchscreen.h"
+#include "sprs.h"
+#include "math.h"
 
 namespace
 {
@@ -86,6 +88,7 @@ namespace
    uint16_t const ADC_CAL        = (1 << 3);
    uint16_t const ADC_NUL        = (1 << 2);
 
+   //ADC_OP | ADC_CONV_21MS;
    uint16_t ADC_CONFIG = ADC_OP | ADC_CONV_164MS | ADC_DV4;
 }
 
@@ -104,14 +107,23 @@ void temperature_init()
 
    //Calibrate CH1
 
+	spr_int_setmask(0x04);//Hackish, clean this up
    spi_send(ADC_CONFIG | ADC_CAL | ADC_NUL); //Step 1/3
-   for( int volatile i = 0; i < CONVTIME; ++i );
+   spr_int_clearflags(0x4);
+   while( spr_int_getflags() & 0x4 == 0 );
+   //for( int volatile i = 0; i < CONVTIME; ++i );
    spi_send(ADC_CONFIG | ADC_CAL          ); //Step 2/3
-   for( int volatile i = 0; i < CONVTIME*20; ++i );
+   spr_int_clearflags(0x4);
+   while( spr_int_getflags() & 0x4 == 0 );
+   //for( int volatile i = 0; i < CONVTIME*20; ++i );
    spi_send(ADC_CONFIG           | ADC_NUL); //Step 3/3
-   for( int volatile i = 0; i < CONVTIME; ++i );
+   spr_int_clearflags(0x4);
+   while( spr_int_getflags() & 0x4 == 0 );
+   //for( int volatile i = 0; i < CONVTIME; ++i );
    spi_send(ADC_CONFIG); //Step 4/3
-   for( int volatile i = 0; i < CONVTIME; ++i );
+   spr_int_clearflags(0x4);
+   while( spr_int_getflags() & 0x4 == 0 );
+   //for( int volatile i = 0; i < CONVTIME; ++i );
 }
 
 int16_t temperature_lastconvert1()
@@ -124,7 +136,18 @@ int16_t temperature_lastconvert2()
    return (int16_t)spi_send(ADC_CONFIG | ADC_CHS);
 }
 
-int16_t temp1,temp2;
+float raw_to_celcius(int raw)
+{
+   const float rinf = 32824.3;
+   const float b = -12.6334;
+   float tmp;
+   tmp = raw/rinf;
+   tmp = log(tmp);
+   tmp = b/tmp;
+   return tmp;
+}
+
+int16_t temp1 = 0, temp2 = 0;
 void temp_event()
 {
    //We alernate what temp we read and queue the next
@@ -138,5 +161,9 @@ void temp_event()
    }
 
    temp2_next = !temp2_next;
-   //debug("Temp Event");
+
+   if( temp2 < 0 )
+   {
+      debug("Neg Temp2");
+   }
 }
