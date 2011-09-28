@@ -4,10 +4,13 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include "ui.h"
 
 namespace
 {
    static volatile uint32_t * const TOUCHREG = (uint32_t * const)0xFFFFFFE0;
+   unsigned touch_state = 0;
+   uint32_t touch_val = 0;
 
    void vprintEx(unsigned x, unsigned y, unsigned size,char const * format, va_list args)
    {
@@ -19,16 +22,16 @@ namespace
    void vprintCenterEx(unsigned center, unsigned top, unsigned size,char const * format, va_list args)
    {
       char buffer[100];
-      int num = vsnprintf(buffer,100,format, args) - 1;
+      int num = vsnprintf(buffer,100,format, args);
       int x = center - (num*8*size)/2;
       printStringEx(x,top,size,(unsigned char *)buffer);
    }
+}
 
-   void setPixel(size_t x, size_t y, uint32_t color)
-   {
-      if( y >= 0 && x >= 0 && y < 480 && x < 800 )
-         SCREEN[y][x] = color;
-   }
+void setPixel(size_t x, size_t y, uint32_t color)
+{
+   if( y >= 0 && x >= 0 && y < 480 && x < 800 )
+      SCREEN[y][x] = color;
 }
 
 
@@ -100,6 +103,16 @@ void printStringEx(unsigned x, unsigned y, unsigned size, unsigned char const * 
    }
 }
 
+void clearArea(unsigned left, unsigned top, unsigned width, unsigned height, uint32_t color)
+{
+   for(size_t yy = 0; yy < height; ++yy)
+   {
+      for(size_t xx = 0; xx < width; ++xx)
+      {
+         setPixel( left+xx, top-yy, color );
+      }
+   }
+}
 void clearScreen(uint32_t color)
 {
    for(size_t y = 0; y < 480; ++y)
@@ -111,21 +124,37 @@ void clearScreen(uint32_t color)
    }
 }
 
+void touch_tap(unsigned x, unsigned y)
+{
+   UI_handleClick( x, y );
+}
+
 void touch_event()
 {
    uint32_t val = *TOUCHREG;
-   uint32_t x = 800 - ( 800 * static_cast<uint32_t>((val >> 16) & 0x0FFF) ) / 0x0FFF;
-   uint32_t y = 480 - ( 480 * static_cast<uint32_t>((val >> 00) & 0x0FFF) ) / 0x0FFF;
    bool touched = val >> 31;
    if(touched)
    {
-      debug("Touched X:%03hu Y:%03hu", x,y);
-      printEx(x,y,1,"X");
+      touch_state = 1;
    }
    else
    {
-      debug("Release            ");
+      if(touch_state > 1)
+      {
+         uint32_t x = ( 800 * static_cast<uint32_t>((touch_val >> 16) & 0x0FFF) ) / 0x0FFF;
+         uint32_t y = ( 480 * static_cast<uint32_t>((touch_val >> 00) & 0x0FFF) ) / 0x0FFF;
+         touch_tap(x,y);
+      }
+      touch_state = 0;
    }
 
 }
 
+void touch_debounce()
+{
+   if(touch_state > 0)
+   {
+      touch_state = 2;
+      touch_val = *TOUCHREG;
+   }
+}

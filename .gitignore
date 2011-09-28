@@ -18,7 +18,6 @@ greybox_tmp/
 .sopc_builder/
 *.rpt
 PLLJ_PLLSPE_INFO.txt
-*.cdf
 *.done
 *.dpf
 *.jdi

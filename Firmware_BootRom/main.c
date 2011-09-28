@@ -13,6 +13,8 @@ static volatile uint32_t * const SDRAM = (uint32_t * const)0x02000000;
 static volatile uint32_t * const THERMO = (uint32_t * const)0xFFFF0020;
 
 unsigned debug_row = 0;
+unsigned hightemp = 25;
+unsigned lowtemp  = 20;
 
 void Start()
 {
@@ -38,20 +40,55 @@ void Start()
    while(1)
    {
       uint32_t newval = 0;
+      uint32_t oldval = *THERMO;
 
+      float temp1c = raw_to_celcius(temp1);
+      float temp2c = raw_to_celcius(temp2);
+      unsigned temp1ci = temp1c;
+      unsigned temp2ci = temp2c;
       printCenterEx(234,479-32,4," %0.1føC ", raw_to_celcius(temp1) );
       printCenterEx(566,479-32,4," %0.1føC ", raw_to_celcius(temp2) );
 
-      print(400,28,"TEMP1: %hd     ",temp1);
-      print(400,20,"TEMP2: %hd     ",temp2);
-      if( temp1 < 0x3a00 ) newval |= 0x2;//Heat
-      if( temp2 < 0x3a00 ) newval |= 0x1;
-      if( temp1 > 0x3b00 ) newval |= 0xA0;//AC & Fan
-      if( temp2 > 0x3b00 ) newval |= 0x48;
-      if( temp1 > 0x3e00 ) newval |= 0x10;//High Fan
-      if( temp2 > 0x3e00 ) newval |= 0x04;
+//      print(400,28,"TEMP1: %hd     ",temp1);
+//      print(400,20,"TEMP2: %hd     ",temp2);
+      if( temp1ci < lowtemp || (temp1ci == lowtemp && (oldval & 0x2)) ) newval |= 0x2;//Heat
+      if( temp2ci < lowtemp || (temp2ci == lowtemp && (oldval & 0x1)) ) newval |= 0x1;
+      if( temp1ci > hightemp|| (temp1ci == hightemp && (oldval & 0xA0)) ) newval |= 0xA0;//AC & Fan
+      if( temp2ci > hightemp|| (temp2ci == hightemp && (oldval & 0x48)) ) newval |= 0x48;
+      if( temp1ci > (hightemp + 1) ) newval |= 0x10;//High Fan
+      if( temp2ci > (hightemp + 1) ) newval |= 0x04;
 
-      (*THERMO) = newval;
+      if( oldval != newval )
+      {
+         (*THERMO) = newval;
+         //Update image
+
+         if(newval & 0x2)
+         {
+            printImage( 100, 350, &heatStart, &heatEnd );
+         }
+         else if(newval & 0xA0)
+         {
+            printImage( 100, 350, &snowFlakeStart, &snowFlakeEnd );
+         }
+         else
+         {
+            clearArea(100-64,350+64,128,128,0);
+         }
+
+         if(newval & 0x1)
+         {
+            printImage( 700, 350, &heatStart, &heatEnd );
+         }
+         else if(newval & 0x48)
+         {
+            printImage( 700, 350, &snowFlakeStart, &snowFlakeEnd );
+         }
+         else
+         {
+            clearArea(700-64,350+64,128,128,0);
+         }
+      }
 
       //Time
       uint8_t dat[4];

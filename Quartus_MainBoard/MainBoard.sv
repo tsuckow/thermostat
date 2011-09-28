@@ -65,8 +65,8 @@ PLLFAST clkmult
    .locked(lock)
 );
 
-wire clock_slow;
-oitClockDivider #(30_000, 0.5) slow ( clock_30khz, clock_slow );
+//wire clock_slow;
+//oitClockDivider #(30_000, 0.5) slow ( clock_30khz, clock_slow );
 
 cfi cfi_proc();
 cfi cfi_prog();
@@ -102,7 +102,7 @@ assign cfi_prog.reset_n= 1'b1;
 //
 
 logic reset;
-POR #( .delay( 2 ) ) poweron ( .clk( clock_slow ), .en(lock && !cfi_request), .rst( reset ) );
+POR #( .delay( 10 ) ) poweron ( .clk( clock_30khz ), .en(lock && !cfi_request), .rst( reset ) );
 
 //
 // Touch Screen
@@ -327,10 +327,10 @@ screen_dma myLCDDMA
 (
    .clk(proc_clk),
    .rst(reset),
-   .buffer_addr(xCoord),
+   .buffer_addr(799-xCoord),
    .buffer_out(bufcolor),
    .buffer_clk(~lcd_clk),
-   .row(yCoord),
+   .row(479-yCoord),
    .hsync( ~ltm_hd && ltm_yvalid ),
    .bus( lcd_bus )
 );

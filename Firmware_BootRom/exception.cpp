@@ -40,6 +40,7 @@ inline uint32_t getExceptionPC()
 }
 
 void touch_event();
+void touch_debounce();
 void temp_event();
 
 void external_exception()
@@ -54,6 +55,7 @@ void external_exception()
 
    if( inter & 0x4 )
    {
+      touch_debounce();
       temp_event();
    }
 

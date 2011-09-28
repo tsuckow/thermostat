@@ -9,6 +9,7 @@ extern "C"
 #include "touchscreen.h"
 #include "alloc.h"
 #include "image.h"
+#include "ui.h"
 
 namespace
 {
@@ -40,7 +41,7 @@ namespace
    }
 }
 
-void printImage(size_t left, size_t top, void const * imgStart, void const * imgEnd)
+void printImage(size_t center, size_t middle, void const * imgStart, void const * imgEnd)
 {
    PSEUDO_FILE *fp;
    png_bytep *row_pointers;
@@ -90,12 +91,26 @@ void printImage(size_t left, size_t top, void const * imgStart, void const * img
    height = png_get_image_height(png_ptr, info_ptr);
 
    row_pointers = png_get_rows(png_ptr, info_ptr);
-
+   int left = center-width/2;
+   int top = middle+height/2;
    for( int x = 0; x < width; ++x )
    {
       for( int y = 0; y < height; ++y )
-      {
-         SCREEN[top-y][left+x] = ((uint32_t *)row_pointers[y])[x];
+      {  
+         if(sizeof(color) != 4)
+         {
+            debug("Color size: %d", sizeof(color));
+         }
+         color * screenpxp = (color*)&SCREEN[top-y][left+x];
+         color * imagepxp = (color*)&((uint32_t *)row_pointers[y])[x];
+         color imagepx = *imagepxp;
+         color screenpx = *screenpxp;
+
+         screenpx.r = imagepx.a * imagepx.r / 255 + (255 - imagepx.a) * screenpx.r / 255;
+         screenpx.g = imagepx.a * imagepx.g / 255 + (255 - imagepx.a) * screenpx.g / 255;
+         screenpx.b = imagepx.a * imagepx.b / 255 + (255 - imagepx.a) * screenpx.b / 255;
+
+         setPixel(left+x,top-y,*(uint32_t *)&screenpx);
       }
    }
 
@@ -105,7 +120,65 @@ void printImage(size_t left, size_t top, void const * imgStart, void const * img
    return;
 }
 
+   extern unsigned hightemp;
+   extern unsigned lowtemp;
+
+void drawhighlow()
+{
+   printCenterEx(400,326,4," %uøC ", hightemp );
+   printCenterEx(400,125,4," %uøC ", lowtemp );
+}
+
+void button_highup()
+{
+   hightemp++;
+   drawhighlow();
+}
+
+void button_highdown()
+{
+   hightemp--;
+   drawhighlow();
+}
+
+void button_lowup()
+{
+   lowtemp++;
+   drawhighlow();
+}
+
+void button_lowdown()
+{
+   lowtemp--;
+   drawhighlow();
+}
+
 void pngdemo()
 {
-   printImage( 200, 200, &snowFlakeStart, &snowFlakeEnd );
+//   printImage( 100, 350, &snowFlakeStart, &snowFlakeEnd );
+//  printImage( 700, 350, &heatStart, &heatEnd );
+
+   UIButton btn;
+   btn.width = 102+20*2;
+   btn.height = 40+20*2;
+   btn.x = 400 - btn.width/2;
+   btn.y = 400;
+   btn.callback = button_highup;
+
+   UIButton btn2 = btn;
+   btn2.y = 300;
+   btn2.callback = button_highdown;
+
+   UI_RegisterButton( btn, UI_NewGraphic(&upStart,&upEnd) );
+   UI_RegisterButton( btn2, UI_NewGraphic(&downStart,&downEnd) );
+
+   btn.y = 200;
+   btn.callback = button_lowup;
+   btn2.y= 100;
+   btn2.callback = button_lowdown;
+
+   UI_RegisterButton( btn, UI_NewGraphic(&upStart,&upEnd) );
+   UI_RegisterButton( btn2, UI_NewGraphic(&downStart,&downEnd) );
+
+   drawhighlow();
 }

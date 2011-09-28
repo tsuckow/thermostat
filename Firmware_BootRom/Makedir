@@ -1,5 +1,6 @@
 #zlib-out/lib/libz.a
-$(call buildexe,boot.or32,pseudo/pseudo_fileio.o main.o BootReset.o touchscreen.o exception.o font.o temperature.o rtc.o snow-flake.o image.o libpng-out/lib/libpng.a,,-Lzlib-out/lib -lz,zlib-out/lib/libz.a)
+GRAPHICS = snow-flake.o down.o up.o heat.o
+$(call buildexe,boot.or32,$(GRAPHICS) ui.o pseudo/pseudo_fileio.o main.o BootReset.o touchscreen.o exception.o font.o temperature.o rtc.o image.o libpng-out/lib/libpng.a,,-Lzlib-out/lib -lz,zlib-out/lib/libz.a)
 
 QUARTUS = /cygdrive/c/altera/11.0/quartus/bin
 
@@ -11,6 +12,10 @@ boot.pof: boot.hex boot.cof
 
 boot.hex: ./boot.or32
 	$(OBJCOPY) -O ihex ./boot.or32 boot.hex
+
+$(call bin2o,down.o, down.png)
+$(call bin2o,up.o, up.png)
+$(call bin2o,heat.o, heat.png)
 
 snow-flake.o: snow-flake.png
 	$(OBJCOPY) -I binary -O elf32-or32 -B or32 --rename-section .data=.rodata,alloc,load,readonly,data,contents snow-flake.png snow-flake.o

@@ -75,7 +75,7 @@ TGTS_$$d	:= $$(d)/$1
 DEPS_$$d	:= $$(TGTS_$$d:%=%.d) $$(addsuffix .d,$$(TGT_SRC))
 
 TGT_BIN		:= $$(TGT_BIN) $$(TGTS_$$d)
-CLEAN		:= $$(CLEAN) $$(TGTS_$$d) $$(TGTS_$$d).map $$(DEPS_$d) $$(filter %.o,$$(TGT_SRC))
+CLEAN		:= $$(CLEAN) $$(TGTS_$$d) $$(TGTS_$$d).map $$(DEPS_$$d) $$(filter %.o,$$(TGT_SRC))
 
 $$(TGTS_$$d):	$$d/Makedir
 
@@ -88,6 +88,28 @@ $$(TGTS_$$d):	$$(TGT_SRC) ram.ld $5
 endef
 #buildexe(exename,sources,CFLAGS,LLibraries,Dependancies)
 buildexe = $(eval $(call buildexe_template,$1,$2,$3,$4,$5))
+
+define bin2o_template
+
+ifndef 2
+$$(error bin2o> No Sources Specified)
+endif
+
+#We could clean paths with abspath but it would be more complicated
+TGT_SRC := $$(addprefix $$d/,$2)
+
+TGTS_$$d	:= $$(d)/$1
+DEPS_$$d	:=
+
+CLEAN		:= $$(CLEAN) $$(TGTS_$$d) $$(DEPS_$$d)
+
+$$(TGTS_$$d):	$$d/Makedir
+
+$$(TGTS_$$d):  TGT_SRC := $$(TGT_SRC)
+$$(TGTS_$$d):  $$(TGT_SRC)
+	$(OBJCOPY) -I binary -O elf32-or32 -B or32 --rename-section .data=.rodata,alloc,load,readonly,data,contents $$(TGT_SRC) $$@
+endef
+bin2o = $(eval $(call bin2o_template,$1,$2))
 
 define builda_template
 
@@ -102,7 +124,7 @@ TGTS_$$d	:= $$(d)/$1
 DEPS_$$d	:= $$(TGTS_$$d:%=%.d) $$(addsuffix .d,$$(TGT_SRC))
 
 TGT_BIN		:= $$(TGT_BIN) $$(TGTS_$$d)
-CLEAN		:= $$(CLEAN) $$(TGTS_$$d) $$(TGTS_$$d).map $$(DEPS_$d) $$(filter %.o,$$(TGT_SRC))
+CLEAN		:= $$(CLEAN) $$(TGTS_$$d) $$(TGTS_$$d).map $$(DEPS_$$d) $$(filter %.o,$$(TGT_SRC))
 
 $$(TGTS_$$d):	$$d/Makedir
 $$(TGTS_$$d):	TGT_SRC := $$(TGT_SRC)
